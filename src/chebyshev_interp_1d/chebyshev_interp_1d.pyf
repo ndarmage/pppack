@@ -1,0 +1,42 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module chebyshev_interp_1d ! in 
+    interface  ! in :chebyshev_interp_1d
+        subroutine chebyshev_coef_1d(nd,xd,yd,c,xmin,xmax) ! in :chebyshev_interp_1d:../../src/chebyshev_interp_1d/f90/chebyshev_interp_1d.f90
+            integer(kind=4), optional,intent(in),check(len(xd)>=nd),depend(xd) :: nd=len(xd)
+            real(kind=8) dimension(nd),intent(in) :: xd
+            real(kind=8) dimension(nd),intent(in),depend(nd) :: yd
+            real(kind=8) dimension(nd),intent(out),depend(nd) :: c
+            real(kind=8) intent(out) :: xmin
+            real(kind=8) intent(out) :: xmax
+        end subroutine chebyshev_coef_1d
+        subroutine chebyshev_interp_1d(nd,xd,yd,ni,xi,yi) ! in :chebyshev_interp_1d:../../src/chebyshev_interp_1d/f90/chebyshev_interp_1d.f90
+            integer(kind=4), optional,intent(in),check(len(xd)>=nd),depend(xd) :: nd=len(xd)
+            real(kind=8) dimension(nd),intent(in) :: xd
+            real(kind=8) dimension(nd),intent(in),depend(nd) :: yd
+            integer(kind=4), optional,intent(in),check(len(xi)>=ni),depend(xi) :: ni=len(xi)
+            real(kind=8) dimension(ni),intent(in) :: xi
+            real(kind=8) dimension(ni),intent(out),depend(ni) :: yi
+        end subroutine chebyshev_interp_1d
+        subroutine chebyshev_value_1d(nd,c,xmin,xmax,ni,xi,yi) ! in :chebyshev_interp_1d:../../src/chebyshev_interp_1d/f90/chebyshev_interp_1d.f90
+            integer(kind=4), optional,intent(in),check(len(c)>=nd),depend(c) :: nd=len(c)
+            real(kind=8) dimension(nd),intent(in) :: c
+            real(kind=8) intent(in) :: xmin
+            real(kind=8) intent(in) :: xmax
+            integer(kind=4), optional,intent(in),check(len(xi)>=ni),depend(xi) :: ni=len(xi)
+            real(kind=8) dimension(ni),intent(in) :: xi
+            real(kind=8) dimension(ni),intent(out),depend(ni) :: yi
+        end subroutine chebyshev_value_1d
+        subroutine qr_solve(m,n,a,b,x) ! in :chebyshev_interp_1d:../../src//qr_solve/f90/qr_solve.f90
+            integer(kind=4), optional,intent(in),check(shape(a,0)==m),depend(a) :: m=shape(a,0)
+            integer(kind=4), optional,intent(in),check(shape(a,1)==n),depend(a) :: n=shape(a,1)
+            real(kind=8) dimension(m,n),intent(in) :: a
+            real(kind=8) dimension(m),intent(in),depend(m) :: b
+            real(kind=8) dimension(n),intent(out),depend(n) :: x
+        end subroutine qr_solve
+    end interface 
+end python module chebyshev_interp_1d
+
+! This file was auto-generated with f2py (version:2).
+! See http://cens.ioc.ee/projects/f2py2e/

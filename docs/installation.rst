@@ -1,0 +1,25 @@
+Installation
+============
+
+PPPACK is available on PyPI, so use pip to install the package as:
+
+.. code-block:: bash
+  
+  pip install pppack
+
+
+Frequently Asked Questions
+==========================
+
+.. todo:: ... as they come, we'll treat them!
+
+
+License
+=======
+
+Some FORTRAN libraries, as chebyshev_interp_1d for instance, were distributed under LGPL terms. They keep its original license.
+
+The MIT license applies to all other components of the package.
+
+.. include:: ../LICENSE.txt
+   :literal:

@@ -1,0 +1,1 @@
+.. automodule:: __init__

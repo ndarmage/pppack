@@ -1,0 +1,118 @@
+# the command  source run.pgs 
+# should make and run all examples in the spline book, leaving the output
+# in the file output.pgs
+\rm -f output.pgs
+echo ' output from examples in PGS ' >output.pgs
+echo '=============================== iiex ====================' >>output.pgs
+make iiex
+iiex >>output.pgs
+\rm -f iiex
+echo '=============================== ivex ====================' >>output.pgs
+make ivex
+ivex >>output.pgs
+\rm -f ivex
+echo '=============================== ixex ====================' >>output.pgs
+make ixex
+ixex >>output.pgs
+\rm -f ixex
+echo '=============================== xex1 ====================' >>output.pgs
+make xex1
+echo '#############>>>>>>>>>>>>>>>>>>   output should be plotted' >>output.pgs
+xex1 >>output.pgs
+\rm -f xex1
+echo '=============================== xex2 ====================' >>output.pgs
+make xex2
+echo '#############>>>>>>>>>>>>>>>>>>   output should be plotted' >>output.pgs
+xex2 >>output.pgs
+\rm -f xex2
+echo '=============================== xex3 ====================' >>output.pgs
+make xex3
+echo '#############>>>>>>>>>>>>>>>>>>   output should be plotted' >>output.pgs
+xex3 >>output.pgs
+\rm -f xex3
+echo '=============================== xex4 ====================' >>output.pgs
+make xex4
+echo '#############>>>>>>>>>>>>>>>>>>   output should be plotted' >>output.pgs
+xex4 >>output.pgs
+\rm -f xex4
+echo '=============================== xiiex2 ====================' >>output.pgs
+make xiiex2
+xiiex2 <xiiex2.dt1 >>output.pgs
+xiiex2 <xiiex2.dt2 >>output.pgs
+\rm -f xiiex2
+echo '=============================== xiiex3 ====================' >>output.pgs
+make xiiex3
+xiiex3 <xiiex3.dt1 >>output.pgs
+xiiex3 <xiiex3.dt2 >>output.pgs
+xiiex3 <xiiex3.dt3 >>output.pgs
+\rm -f xiiex3
+echo '=============================== xiiex4 ====================' >>output.pgs
+make xiiex4
+xiiex4 <xiiex4.dt1 >>output.pgs
+xiiex4 <xiiex4.dt2 >>output.pgs
+\rm -f xiiex4
+echo '=============================== xiiiex1 ===================' >>output.pgs
+make xiiiex1
+xiiiex1 <xiiiex1.dt1 >>output.pgs
+xiiiex1 <xiiiex1.dt2 >>output.pgs
+\rm -f xiiiex1
+echo '=============================== xiiiex2 ===================' >>output.pgs
+make xiiiex2
+xiiiex2 <xiiiex2.dt1 >>output.pgs
+xiiiex2 <xiiiex2.dt2 >>output.pgs
+xiiiex2 <xiiiex2.dt3 >>output.pgs
+\rm -f xiiiex2
+echo '=============================== xiiiex2m ==================' >>output.pgs
+make xiiiex2m
+xiiiex2m <xiiiex2m.dt1 >>output.pgs
+xiiiex2m <xiiiex2m.dt2 >>output.pgs
+xiiiex2m <xiiiex2m.dt3 >>output.pgs
+\rm -f xiiiex2m
+echo '=============================== xiiiex3 ===================' >>output.pgs
+make xiiiex3
+echo '#############>>>>>>>>>>>>>>>>>>   output should be plotted' >>output.pgs
+xiiiex3 >>output.pgs
+\rm -f xiiiex3
+echo '=============================== xivex1 ====================' >>output.pgs
+make xivex1
+xivex1 <xivex1.dt >>output.pgs
+\rm -f xivex1
+echo '====================  Reinsch example  ====================' >>output.pgs
+make reinsch
+reinsch >>output.pgs
+\rm -f reinsch
+echo '=============================== xivex2 ====================' >>output.pgs
+make xivex2
+xivex2 <xivex2.dt >>output.pgs
+\rm -f xivex2
+echo '=============================== xivex3 ====================' >>output.pgs
+make xivex3
+xivex3 <xivex3.dt >>output.pgs
+\rm -f xivex3
+echo '=============================== xivex4 ====================' >>output.pgs
+make xivex4
+echo '#############>>>>>>>>>>>>>>>>>>   output should be plotted' >>output.pgs
+xivex4 <xivex4.dt >>output.pgs
+\rm -f xivex4
+echo '=============================== xvex ====================' >>output.pgs
+make xvex
+xvex >>output.pgs
+\rm -f xvex
+echo '=============================== xviex2 ====================' >>output.pgs
+make xviex2
+echo '#############>>>>>>>>>>>>>>>>>>   output should be plotted' >>output.pgs
+xviex2 <xviex2.dt >>output.pgs
+\rm -f xviex2
+echo '=============================== xviex3 ====================' >>output.pgs
+make xviex3
+echo '#############>>>>>>>>>>>>>>>>>>   output should be plotted' >>output.pgs
+xviex3 >>output.pgs
+\rm -f xviex3
+echo '=============================== xviiex2 ===================' >>output.pgs
+make xviiex2
+xviiex2 >>output.pgs
+\rm -f xviiex2
+echo '=============================== xviiex3 ===================' >>output.pgs
+make xviiex3
+xviiex3 >>output.pgs
+\rm -f xviiex3

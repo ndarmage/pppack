@@ -1,0 +1,161 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module qr_solve ! in 
+    interface  ! in :qr_solve
+        subroutine daxpy(n,da,dx,incx,dy,incy) ! in :qr_solve:../src/qr_solve/f90/qr_solve.f90
+            integer(kind=4) :: n
+            real(kind=8) :: da
+            real(kind=8) dimension(*) :: dx
+            integer(kind=4) :: incx
+            real(kind=8) dimension(*) :: dy
+            integer(kind=4) :: incy
+        end subroutine daxpy
+        function ddot(n,dx,incx,dy,incy) ! in :qr_solve:../src/qr_solve/f90/qr_solve.f90
+            integer(kind=4) :: n
+            real(kind=8) dimension(*) :: dx
+            integer(kind=4) :: incx
+            real(kind=8) dimension(*) :: dy
+            integer(kind=4) :: incy
+            real(kind=8) :: ddot
+        end function ddot
+        function dnrm2(n,x,incx) ! in :qr_solve:../src/qr_solve/f90/qr_solve.f90
+            integer(kind=4) :: n
+            real(kind=8) dimension(*) :: x
+            integer(kind=4) :: incx
+            real(kind=8) :: dnrm2
+        end function dnrm2
+        subroutine dqrank(a,lda,m,n,tol,kr,jpvt,qraux,work) ! in :qr_solve:../src/qr_solve/f90/qr_solve.f90
+            real(kind=8) dimension(lda,n) :: a
+            integer(kind=4), optional,check(shape(a,0)==lda),depend(a) :: lda=shape(a,0)
+            integer(kind=4) :: m
+            integer(kind=4), optional,check(shape(a,1)==n),depend(a) :: n=shape(a,1)
+            real(kind=8) :: tol
+            integer(kind=4) :: kr
+            integer(kind=4) dimension(n),depend(n) :: jpvt
+            real(kind=8) dimension(n),depend(n) :: qraux
+            real(kind=8) dimension(n),depend(n) :: work
+        end subroutine dqrank
+        subroutine dqrdc(a,lda,n,p,qraux,jpvt,work,job) ! in :qr_solve:../src/qr_solve/f90/qr_solve.f90
+            real(kind=8) dimension(lda,p) :: a
+            integer(kind=4), optional,check(shape(a,0)==lda),depend(a) :: lda=shape(a,0)
+            integer(kind=4) :: n
+            integer(kind=4), optional,check(shape(a,1)==p),depend(a) :: p=shape(a,1)
+            real(kind=8) dimension(p),depend(p) :: qraux
+            integer(kind=4) dimension(p),depend(p) :: jpvt
+            real(kind=8) dimension(p),depend(p) :: work
+            integer(kind=4) :: job
+        end subroutine dqrdc
+        subroutine dqrls(a,lda,m,n,tol,kr,b,x,r,jpvt,qraux,work,itask,ind) ! in :qr_solve:../src/qr_solve/f90/qr_solve.f90
+            real(kind=8) dimension(lda,n) :: a
+            integer(kind=4), optional,check(shape(a,0)==lda),depend(a) :: lda=shape(a,0)
+            integer(kind=4), optional,check(len(b)>=m),depend(b) :: m=len(b)
+            integer(kind=4), optional,check(shape(a,1)==n),depend(a) :: n=shape(a,1)
+            real(kind=8) :: tol
+            integer(kind=4) :: kr
+            real(kind=8) dimension(m) :: b
+            real(kind=8) dimension(n),depend(n) :: x
+            real(kind=8) dimension(m),depend(m) :: r
+            integer(kind=4) dimension(n),depend(n) :: jpvt
+            real(kind=8) dimension(n),depend(n) :: qraux
+            real(kind=8) dimension(n),depend(n) :: work
+            integer(kind=4) :: itask
+            integer(kind=4) :: ind
+        end subroutine dqrls
+        subroutine dqrlss(a,lda,m,n,kr,b,x,r,jpvt,qraux) ! in :qr_solve:../src/qr_solve/f90/qr_solve.f90
+            real(kind=8) dimension(lda,n) :: a
+            integer(kind=4), optional,check(shape(a,0)==lda),depend(a) :: lda=shape(a,0)
+            integer(kind=4), optional,check(len(b)>=m),depend(b) :: m=len(b)
+            integer(kind=4), optional,check(shape(a,1)==n),depend(a) :: n=shape(a,1)
+            integer(kind=4) :: kr
+            real(kind=8) dimension(m) :: b
+            real(kind=8) dimension(n),depend(n) :: x
+            real(kind=8) dimension(m),depend(m) :: r
+            integer(kind=4) dimension(n),depend(n) :: jpvt
+            real(kind=8) dimension(n),depend(n) :: qraux
+        end subroutine dqrlss
+        subroutine dqrsl(a,lda,n,k,qraux,y,qy,qty,b,rsd,ab,job,info) ! in :qr_solve:../src/qr_solve/f90/qr_solve.f90
+            real(kind=8) dimension(lda,*) :: a
+            integer(kind=4), optional,check(shape(a,0)==lda),depend(a) :: lda=shape(a,0)
+            integer(kind=4), optional,check(len(y)>=n),depend(y) :: n=len(y)
+            integer(kind=4), optional,check(len(b)>=k),depend(b) :: k=len(b)
+            real(kind=8) dimension(*) :: qraux
+            real(kind=8) dimension(n) :: y
+            real(kind=8) dimension(n),depend(n) :: qy
+            real(kind=8) dimension(n),depend(n) :: qty
+            real(kind=8) dimension(k) :: b
+            real(kind=8) dimension(n),depend(n) :: rsd
+            real(kind=8) dimension(n),depend(n) :: ab
+            integer(kind=4) :: job
+            integer(kind=4) :: info
+        end subroutine dqrsl
+        subroutine drot(n,x,incx,y,incy,c,s) ! in :qr_solve:../src/qr_solve/f90/qr_solve.f90
+            integer(kind=4) :: n
+            real(kind=8) dimension(*) :: x
+            integer(kind=4) :: incx
+            real(kind=8) dimension(*) :: y
+            integer(kind=4) :: incy
+            real(kind=8) :: c
+            real(kind=8) :: s
+        end subroutine drot
+        subroutine drotg(sa,sb,c,s) ! in :qr_solve:../src/qr_solve/f90/qr_solve.f90
+            real(kind=8) :: sa
+            real(kind=8) :: sb
+            real(kind=8) :: c
+            real(kind=8) :: s
+        end subroutine drotg
+        subroutine dscal(n,sa,x,incx) ! in :qr_solve:../src/qr_solve/f90/qr_solve.f90
+            integer(kind=4) :: n
+            real(kind=8) :: sa
+            real(kind=8) dimension(*) :: x
+            integer(kind=4) :: incx
+        end subroutine dscal
+        subroutine dsvdc(a,lda,m,n,s,e,u,ldu,v,ldv,work,job,info) ! in :qr_solve:../src/qr_solve/f90/qr_solve.f90
+            real(kind=8) dimension(lda,n) :: a
+            integer(kind=4), optional,check(shape(a,0)==lda),depend(a) :: lda=shape(a,0)
+            integer(kind=4), optional,check(shape(u,1)==m),depend(u) :: m=shape(u,1)
+            integer(kind=4), optional,check(shape(a,1)==n),depend(a) :: n=shape(a,1)
+            real(kind=8) dimension(*) :: s
+            real(kind=8) dimension(*) :: e
+            real(kind=8) dimension(ldu,m) :: u
+            integer(kind=4), optional,check(shape(u,0)==ldu),depend(u) :: ldu=shape(u,0)
+            real(kind=8) dimension(ldv,n),depend(n) :: v
+            integer(kind=4), optional,check(shape(v,0)==ldv),depend(v) :: ldv=shape(v,0)
+            real(kind=8) dimension(m),depend(m) :: work
+            integer(kind=4) :: job
+            integer(kind=4) :: info
+        end subroutine dsvdc
+        subroutine dswap(n,x,incx,y,incy) ! in :qr_solve:../src/qr_solve/f90/qr_solve.f90
+            integer(kind=4) :: n
+            real(kind=8) dimension(*) :: x
+            integer(kind=4) :: incx
+            real(kind=8) dimension(*) :: y
+            integer(kind=4) :: incy
+        end subroutine dswap
+        subroutine normal_solve(m,n,a,b,x,flag) ! in :qr_solve:../src/qr_solve/f90/qr_solve.f90
+            integer(kind=4), optional,check(shape(a,0)==m),depend(a) :: m=shape(a,0)
+            integer(kind=4), optional,check(shape(a,1)==n),depend(a) :: n=shape(a,1)
+            real(kind=8) dimension(m,n) :: a
+            real(kind=8) dimension(m),depend(m) :: b
+            real(kind=8) dimension(n),depend(n) :: x
+            integer(kind=4) :: flag
+        end subroutine normal_solve
+        subroutine qr_solve(m,n,a,b,x) ! in :qr_solve:../src/qr_solve/f90/qr_solve.f90
+            integer(kind=4), optional,intent(in),check(shape(a,0)==m),depend(a) :: m=shape(a,0)
+            integer(kind=4), optional,intent(in),check(shape(a,1)==n),depend(a) :: n=shape(a,1)
+            real(kind=8) dimension(m,n),intent(in) :: a
+            real(kind=8) dimension(m),intent(in),depend(m) :: b
+            real(kind=8) dimension(n),intent(out),depend(n) :: x
+        end subroutine qr_solve
+        subroutine svd_solve(m,n,a,b,x) ! in :qr_solve:../src/qr_solve/f90/qr_solve.f90
+            integer(kind=4), optional,check(shape(a,0)==m),depend(a) :: m=shape(a,0)
+            integer(kind=4), optional,check(shape(a,1)==n),depend(a) :: n=shape(a,1)
+            real(kind=8) dimension(m,n) :: a
+            real(kind=8) dimension(m),depend(m) :: b
+            real(kind=8) dimension(n),depend(n) :: x
+        end subroutine svd_solve
+    end interface 
+end python module qr_solve
+
+! This file was auto-generated with f2py (version:2).
+! See http://cens.ioc.ee/projects/f2py2e/

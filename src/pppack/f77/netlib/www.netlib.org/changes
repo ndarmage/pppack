@@ -1,0 +1,14 @@
+11 May 1992
+installed latest version from de Boor.   The main change of significance
+is in interv, with the effect that splines are now continuous from the
+left at the rightmost knot.
+
+13 Aug 1992	ehg@research.att.com
+bvalue.f	added parens in parameter statement to keep f77 happy
+bsplvb.f	likewise
+l2main.f	likewise
+
+18 Dec 2005 http://www.cs.wisc.edu/~deboor/
+Updated a few declarations of arrays to reflect the general
+adoption of more modern Fortran compilers.
+
