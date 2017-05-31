@@ -47,7 +47,7 @@ setup(
     author            = 'Daniele Tomatis',
     author_email      = 'daniele.tomatis@gmail.com', # google groups ?
     
-    #url='' not available yet
+    url='https://github.com/ndarmage/pppack'
     
     ext_modules = [ext1, ext2, ext3],
     

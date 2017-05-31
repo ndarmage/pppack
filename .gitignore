@@ -15,7 +15,3 @@
 
 # extensions
 *.so
-
-# fortran src to discard
-/src/*/f77/
-/src/*/cc_*/
