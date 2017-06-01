@@ -35,7 +35,7 @@ from pppack.pppack import __version__ as pkgversion
 from pppack.pppack import __title__ as pkgname
 
 import sys
-sys.path.extend('config_fc --fcompiler=gnu95'.split()) 
+sys.path.extend('config_fc --fcompiler=gnu95'.split())
 
 setup(
     name = pkgname,
