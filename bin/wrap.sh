@@ -9,12 +9,11 @@ if [ -z "$1" ]; then
     echo "ERROR, missing input libname"
     exit 1
 fi
-lib=$1
-if [ ! -d $dir$1 ]; then
-    echo "ERROR, invalid libname $dir$1"
+lib=$dir$1
+if [ ! -d $lib ]; then
+    echo "ERROR, invalid libname $lib"
     exit 1
 fi
-lib=$dir$1
 
 libopt=''
 # apply special options according to input lib

@@ -34,7 +34,7 @@ echo "Library installed as ./lib${libname}.a"
 #
 # test the library
 echo "gfortran -o ${libname}_prb.exe ${libname}_prb.f90 ./lib${libname}.a"
-gfortran -o ${libname}_prb.exe ${libname}_prb.f90 ./lib${libname}.a
+gfortran -o ${libname}_prb.exe ${libname}_prb.f90 ./lib${libname}.a ../../r8lib/f90/libr8lib.a
 ./${libname}_prb.exe > ${libname}_prb_output.txt
 echo " --- TEST LIB ---"
 echo "diff between ref. and current ${libname}_prb_output.txt"

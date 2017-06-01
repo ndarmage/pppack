@@ -39,7 +39,7 @@ sys.path.extend('config_fc --fcompiler=gnu95'.split())
 
 setup(
     name = pkgname,
-    version = pkgversion,
+    version = pkgversion+'.post1',
     
     description       = 'A Python Piecewise Polynomial Package',
     long_description = long_description,
