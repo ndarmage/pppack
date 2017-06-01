@@ -1,0 +1,9 @@
+sphinx.ext.autodoc
+sphinx.ext.doctest
+sphinx.ext.todo
+sphinx.ext.coverage
+sphinxcontrib.bibtex
+sphinx.ext.mathjax
+sphinxfortran.fortran_domain
+sphinxfortran.fortran_autodoc
+sphinx.ext.intersphinx
