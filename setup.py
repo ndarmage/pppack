@@ -45,6 +45,7 @@ with open('docs/doc-requirements.txt','r') as f:
 
 if on_rtd:
     requirements = [r for r in requirements if not 'numpy' in r]
+    #ext_mods = []
 
 setup(
     name = pkgname,
