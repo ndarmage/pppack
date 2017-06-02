@@ -345,12 +345,10 @@ if on_rtd:
         @classmethod
         def __getattr__(cls, name): return MagicMock()
 
-    MOCK_MODULES = ['pppack.lib.pppack',
-                    'pppack.lib.chebyshev_interp_1d',
-                    'pppack.lib.divdif',
+    MOCK_MODULES = ['lib.pppack',
+                    'lib.chebyshev_interp_1d',
+                    'lib.divdif',
                    ]
-    print("MOCK_MODULES")
-    print(MOCK_MODULES)
-    sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
-else:
-    print("\nWARNING:: not on RTD!\n")
+    
+    sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES \
+                                           if mod_name in sys.modules)
