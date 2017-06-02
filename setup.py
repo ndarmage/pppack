@@ -49,7 +49,7 @@ setup(
     
     url='https://github.com/ndarmage/pppack',
     
-    ext_modules = [ext1, ext2, ext3],
+    ext_modules = [ext1, ext2, ext3] if (os.environ.get('READTHEDOCS', None) == 'False') else [],
     
     license='MIT',
     
@@ -69,7 +69,7 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     
-    keywords='multivariate polynomial splines fortran',
+    keywords=['multivariate polynomial','splines','fortran'],
     
     packages=['pppack'],
 

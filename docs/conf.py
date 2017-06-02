@@ -52,7 +52,7 @@ extensions = [
 # set the filepath to the fortran 90 extension libs
 fortran_src=[
     '../src/pppack/f90/pppack.f90',
-    '../src/chebyshev_interp_1d/f90/chebyshev_interp_1d.f90'
+    '../src/chebyshev_interp_1d/f90/chebyshev_interp_1d.f90',
 ]
 
 # link to external documentation of other python modules
