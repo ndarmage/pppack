@@ -333,7 +333,8 @@ texinfo_no_detailmenu = False
 # -- READTHEDOCS ----------------------------------------------------------
 
 # Ignore some modules during documentation building on readthedocs.org
-if os.environ.get('READTHEDOCS', None) == 'True':
+on_rtd = os.environ.get('READTHEDOCS') == 'True'
+if on_rtd:
     from mock import Mock as MagicMock
     
     class Mock(MagicMock):

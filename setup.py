@@ -34,8 +34,13 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 from pppack.pppack import __version__ as pkgversion
 from pppack.pppack import __title__ as pkgname
 
-import sys
+import sys, os
 sys.path.extend('config_fc --fcompiler=gnu95'.split())
+
+with open('docs/doc-requirements.txt','r') as f:
+    requirements = f.readlines()
+
+on_rtd = os.environ.get('READTHEDOCS') == 'True'
 
 setup(
     name = pkgname,
@@ -49,7 +54,7 @@ setup(
     
     url='https://github.com/ndarmage/pppack',
     
-    ext_modules = [ext1, ext2, ext3] if (os.environ.get('READTHEDOCS', None) == 'False') else [],
+    ext_modules = [ext1, ext2, ext3] if on_rtd else [],
     
     license='MIT',
     
@@ -73,7 +78,7 @@ setup(
     
     packages=['pppack'],
 
-    install_requires=['numpy >=1.11.0',],
+    install_requires=requirements,
     
     include_package_data=True,
     
