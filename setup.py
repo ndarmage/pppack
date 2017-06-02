@@ -24,6 +24,7 @@ ext3 = Extension(name = 'pppack.lib.divdif',
                  sources = ['src/divdif/divdif.pyf','src/divdif/f90/divdif.f90'],
                  define_macros = [('DF2PY_REPORT_ON_ARRAY_COPY',''),],
                  )
+ext_mods = [ext1, ext2, ext3]
 
 # Get the long description from the README file
 # to use a consistent encoding
@@ -37,10 +38,14 @@ from pppack.pppack import __title__ as pkgname
 import sys, os
 sys.path.extend('config_fc --fcompiler=gnu95'.split())
 
+on_rtd = os.environ.get('READTHEDOCS') == 'True'
+
 with open('docs/doc-requirements.txt','r') as f:
     requirements = f.readlines()
 
-on_rtd = os.environ.get('READTHEDOCS') == 'True'
+if on_rtd:
+    requirements = [r for r in requirements if not 'numpy' in r]
+    ext_mods = []
 
 setup(
     name = pkgname,
@@ -54,7 +59,7 @@ setup(
     
     url='https://github.com/ndarmage/pppack',
     
-    ext_modules = [ext1, ext2, ext3] if on_rtd else [],
+    ext_modules = ext_mods,
     
     license='MIT',
     

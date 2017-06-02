@@ -345,7 +345,8 @@ if on_rtd:
         @classmethod
         def __getattr__(cls, name): return MagicMock()
 
-    MOCK_MODULES = ['pppack',
+    MOCK_MODULES = ['numpy',
+                    'pppack',
                     'lib.pppack',
                     'lib.chebyshev_interp_1d',
                    #'lib.divdif',
