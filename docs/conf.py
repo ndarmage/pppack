@@ -349,7 +349,7 @@ if on_rtd:
                     'pppack',
                     'lib.pppack',
                     'lib.chebyshev_interp_1d',
-                    'lib.divdif',
+                   #'lib.divdif',
                    ]
     
     sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
