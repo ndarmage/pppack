@@ -57,7 +57,7 @@ fortran_src=[
 
 # link to external documentation of other python modules
 intersphinx_mapping = {
-    'numpy': ('https://docs.scipy.org/doc/numpy-1.12.0/', None),
+    'numpy': ('https://docs.scipy.org/doc/numpy-1.12.0/'  , None),
     'f2py' : ('https://docs.scipy.org/doc/numpy-dev/f2py/', None)
 }
 
