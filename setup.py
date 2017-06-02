@@ -42,10 +42,11 @@ on_rtd = os.environ.get('READTHEDOCS') == 'True'
 
 with open('docs/doc-requirements.txt','r') as f:
     requirements = f.readlines()
+    requirements = [r.replace('\n','') for r in requirements]
 
 if on_rtd:
     requirements = [r for r in requirements if not 'numpy' in r]
-    #ext_mods = []
+    ext_mods = []
 
 setup(
     name = pkgname,
