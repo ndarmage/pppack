@@ -45,7 +45,7 @@ with open('docs/doc-requirements.txt','r') as f:
     requirements = [r.replace('\n','') for r in requirements]
 
 if on_rtd:
-    requirements = [r for r in requirements if not 'numpy' in r]
+    #requirements = [r for r in requirements if not 'numpy' in r]
     ext_mods = []
 
 setup(

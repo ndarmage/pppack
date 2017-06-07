@@ -345,10 +345,10 @@ if on_rtd:
         @classmethod
         def __getattr__(cls, name): return MagicMock()
 
-    MOCK_MODULES = ['numpy',
-                    'lib.pppack',
+    MOCK_MODULES = ['lib.pppack',
                     'lib.chebyshev_interp_1d',
                    #'lib.divdif',
+                   #'numpy',
                    ]
     
     sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
