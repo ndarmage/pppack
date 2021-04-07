@@ -29,7 +29,7 @@ gfortran -o %libname%_prb.exe %libname%_prb.f90 lib%libname%.a ..\..\r8lib\f90\l
 %libname%_prb.exe > %libname%_prb_output.txt
 echo " --- TEST LIB ---"
 echo "diff between ref. and current %libname%_prb_output.txt"
-FC %libname%_prb_output_ref.txt %libname%_prb_output.txt
+fc %libname%_prb_output_ref.txt %libname%_prb_output.txt
 REM echo " *** without datetime at the beginning and at the end ***"
 REM FC <(tail -n +1 ${libname}_prb_output.txt | head -n -1) <(tail -n +1 ${libname}_prb_output_tst.txt | head -n -1)
 echo " --- NORMAL END ---"

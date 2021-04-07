@@ -4624,7 +4624,7 @@ subroutine sbblok ( bloks, integs, nbloks, ipivot, b, x )
 
   integer ( kind = 4 ), intent(in) :: nbloks
 
-  real ( kind = 8 ), intent(in) :: b(*)
+  real ( kind = 8 ), intent(inout) :: b(*)
   real ( kind = 8 ), intent(in) :: bloks(*)
   integer ( kind = 4 ) i
   integer ( kind = 4 ) index
@@ -5028,7 +5028,7 @@ subroutine slvblk ( bloks, integs, nbloks, b, ipivot, x, iflag )
 
   integer ( kind = 4 ), intent(in) :: nbloks
 
-  real ( kind = 8 ), intent(in) :: b(*)
+  real ( kind = 8 ), intent(inout) :: b(*)
   real ( kind = 8 ), intent(inout) :: bloks(*)
   integer ( kind = 4 ), intent(out) :: iflag
   integer ( kind = 4 ), intent(in) :: integs(3,nbloks)
@@ -7003,22 +7003,25 @@ subroutine timestamp ( )
 !
   implicit none
 
-  character ( len = 8 ) ampm
-  integer ( kind = 4 ) d
-  integer ( kind = 4 ) h
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) mm
-! character ( len = 9 ), parameter, dimension(12) :: month = ...
-  character :: month(12)*9
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ) s
-  integer ( kind = 4 ) values(8)
-  integer ( kind = 4 ) y
-  
-  data month / &
-    'January  ', 'February ', 'March    ', 'April    ', &
-    'May      ', 'June     ', 'July     ', 'August   ', &
-    'September', 'October  ', 'November ', 'December ' /
+  character ( len = 8 ) :: ampm
+  integer ( kind = 4 ) :: d
+  integer ( kind = 4 ) :: h
+  integer ( kind = 4 ) :: m
+  integer ( kind = 4 ) :: mm
+  character ( len = 9 ), parameter, dimension(12) :: month = (/ &
+            'January  ', 'February ', 'March    ', 'April    ', &
+            'May      ', 'June     ', 'July     ', 'August   ', &
+            'September', 'October  ', 'November ', 'December ' /)
+  integer ( kind = 4 ) :: n
+  integer ( kind = 4 ) :: s
+  integer ( kind = 4 ) :: values(8)
+  integer ( kind = 4 ) :: y
+
+!  character :: month(12)*9
+!  data month / &
+!    'January  ', 'February ', 'March    ', 'April    ', &
+!    'May      ', 'June     ', 'July     ', 'August   ', &
+!    'September', 'October  ', 'November ', 'December ' /
 
   call date_and_time ( values = values )
 

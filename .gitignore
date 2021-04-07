@@ -19,7 +19,9 @@
 /src/x/cc_*/
 /src/**/*.o
 /src/**/*.a
+/src/**/*.mod
 /src/**/*.pyd
+/src/**/*.exe
 
 # extensions
 # *.so
