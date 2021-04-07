@@ -35,15 +35,15 @@ subroutine chebyshev_coef_1d ( nd, xd, yd, c, xmin, xmax )
 
   integer ( kind = 4 ), intent(in) :: nd
 
-  real ( kind = 8 ) a(nd,nd)
+  real ( kind = 8 ) ::  a(nd,nd)
   real ( kind = 8 ), intent(out) :: c(nd)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) j
-  real ( kind = 8 ) x(nd)
+  real ( kind = 8 ) :: x(nd)
   real ( kind = 8 ), intent(in) :: xd(nd)
   real ( kind = 8 ), intent(out) :: xmax
   real ( kind = 8 ), intent(out) :: xmin
   real ( kind = 8 ), intent(in) :: yd(nd)
+  integer ( kind = 4 ) :: i
+  integer ( kind = 4 ) :: j
 
   if ( nd == 1 ) then
     xmin = xd(1)
@@ -109,12 +109,14 @@ subroutine chebyshev_interp_1d ( nd, xd, yd, ni, xi, yi )
 !
   implicit none
 
-  integer ( kind = 4 ), intent(in) :: nd, ni
+  integer ( kind = 4 ), intent(in) :: nd
+  integer ( kind = 4 ), intent(in) :: ni
 
-  real ( kind = 8 ) c(nd)
-  real ( kind = 8 ), intent(in) :: xd(nd), xi(ni)
-  real ( kind = 8 ) xmax
-  real ( kind = 8 ) xmin
+  real ( kind = 8 ) :: c(nd)
+  real ( kind = 8 ), intent(in) :: xd(nd)
+  real ( kind = 8 ), intent(in) :: xi(ni)
+  real ( kind = 8 ) :: xmax
+  real ( kind = 8 ) :: xmin
   real ( kind = 8 ), intent(in) :: yd(nd)
   real ( kind = 8 ), intent(out) :: yi(ni)
 
@@ -160,15 +162,17 @@ subroutine chebyshev_value_1d ( nd, c, xmin, xmax, ni, xi, yi )
 !
   implicit none
 
-  integer ( kind = 4 ), intent(in) :: nd, ni
+  integer ( kind = 4 ), intent(in) :: nd
+  integer ( kind = 4 ), intent(in) :: ni
 
-  real ( kind = 8 ) a(ni,nd)
+  real ( kind = 8 ) :: a(ni,nd)
   real ( kind = 8 ), intent(in) :: c(nd)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) j
-  real ( kind = 8 ) x(ni)
+  integer ( kind = 4 ) :: i
+  integer ( kind = 4 ) :: j
+  real ( kind = 8 ) :: x(ni)
   real ( kind = 8 ), intent(in) :: xi(ni)
-  real ( kind = 8 ), intent(in) :: xmax, xmin
+  real ( kind = 8 ), intent(in) :: xmax
+  real ( kind = 8 ), intent(in) :: xmin
   real ( kind = 8 ), intent(out) :: yi(ni)
 
   if ( nd == 1 ) then
