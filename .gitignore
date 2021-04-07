@@ -17,6 +17,9 @@
 
 # build folders of local so fortran extension
 /src/x/cc_*/
+/src/**/*.o
+/src/**/*.a
+/src/**/*.pyd
 
 # extensions
 # *.so
