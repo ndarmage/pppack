@@ -50,15 +50,15 @@ extensions = [
 ]
 
 # set the filepath to the fortran 90 extension libs
-fortran_src=[
-    '../src/pppack/f90/pppack.f90',
+fortran_src = [
     '../src/chebyshev_interp_1d/f90/chebyshev_interp_1d.f90',
+    '../src/pppack/f90/pppack.f90',
 ]
 
 # link to external documentation of other python modules
 intersphinx_mapping = {
-    'numpy': ('https://docs.scipy.org/doc/numpy-1.12.0/'  , None),
-    'f2py' : ('https://docs.scipy.org/doc/numpy-dev/f2py/', None)
+    'numpy': ('https://numpy.org/doc/stable/'  , None),
+    'f2py' : ('https://numpy.org/doc/stable/f2py/', None)
 }
 
 # change the member order used by autodoc 
@@ -337,7 +337,7 @@ texinfo_no_detailmenu = False
 
 # Ignore some modules during documentation building on readthedocs.org
 on_rtd = os.environ.get('READTHEDOCS') == 'True'
-if on_rtd:
+if on_rtd and True:
 
     try:
         from unittest.mock import MagicMock # Python 3.3

@@ -7003,21 +7003,21 @@ subroutine timestamp ( )
 !
   implicit none
 
-  character ( len = 8 ) :: ampm
-  integer ( kind = 4 ) :: d
-  integer ( kind = 4 ) :: h
-  integer ( kind = 4 ) :: m
-  integer ( kind = 4 ) :: mm
+  character ( len = 8 ) ampm
+  integer ( kind = 4 ) d
+  integer ( kind = 4 ) h
+  integer ( kind = 4 ) m
+  integer ( kind = 4 ) mm
   character ( len = 9 ), parameter, dimension(12) :: month = (/ &
             'January  ', 'February ', 'March    ', 'April    ', &
             'May      ', 'June     ', 'July     ', 'August   ', &
             'September', 'October  ', 'November ', 'December ' /)
-  integer ( kind = 4 ) :: n
-  integer ( kind = 4 ) :: s
-  integer ( kind = 4 ) :: values(8)
-  integer ( kind = 4 ) :: y
+  integer ( kind = 4 ) n
+  integer ( kind = 4 ) s
+  integer ( kind = 4 ) values(8)
+  integer ( kind = 4 ) y
 
-!  character :: month(12)*9
+!  character month(12)*9
 !  data month / &
 !    'January  ', 'February ', 'March    ', 'April    ', &
 !    'May      ', 'June     ', 'July     ', 'August   ', &

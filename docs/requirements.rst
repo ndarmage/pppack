@@ -32,7 +32,7 @@ wrapped FORTRAN modules.
 
 .. _`Pearu Peterson`: http://cens.ioc.ee/~pearu/
 
-.. _f2py: https://docs.scipy.org/doc/numpy-dev/f2py/
+.. _f2py: https://numpy.org/doc/stable/f2py/
 
 
 Bibliography
