@@ -1,13 +1,13 @@
-from os import path
-
-here = path.abspath(path.dirname(__file__))
-
+import os
+import sys
 import setuptools
 
 # to use f2py extensions
 from numpy.distutils.core import setup, Extension
 
-import setuptools
+here = os.path.abspath(os.path.dirname(__file__))
+
+on_rtd = os.environ.get('READTHEDOCS') == 'True'
 
 # list f2py extensions
 ext1 = Extension(name = 'pppack.lib.pppack',
@@ -26,19 +26,47 @@ ext3 = Extension(name = 'pppack.lib.divdif',
                  )
 ext_mods = [ext1, ext2, ext3]
 
+def get_value(ifile, *args):
+    "extract value of args keys in module ifile"
+    o = []
+    with open(ifile, 'r') as fid:
+        lines = fid.readlines()
+
+    for v in args:
+        if isinstance(v, str):
+            for line in lines:
+                if v in line:
+                    val = line.split(v)[1]
+                    if '=' in val:
+                        val = val.split('=')[1].strip()
+                        if '#' in val:
+                            val = val.split('#')[0].strip()
+                    else:
+                        raise RuntimeError('missing assignation for ' + v)
+                    o.append(val.replace('"', '').replace("'",''))
+        else:
+            raise TypeError('input var ' + str(v) + ' is not of type str')
+
+    return o
+
 # Get the long description from the README file
 # to use a consistent encoding
 from codecs import open
-with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
+with open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
-from pppack.pppack import __version__ as pkgversion
-from pppack.pppack import __title__ as pkgname
+if on_rtd:
+    # workaround to avoid the issue of mocking lib.pppack import
+    mainfile = os.path.join(here, 'pppack', 'pppack.py')
+    pkgversion = get_value(mainfile, '__version__')[0]
+    pkgname = get_value(mainfile, '__version__')[0]
+else:
+    from pppack.pppack import __version__ as pkgversion
+    from pppack.pppack import __title__ as pkgname
 
-import sys, os
+
 sys.path.extend('config_fc --fcompiler=gnu95'.split())
-
-on_rtd = os.environ.get('READTHEDOCS') == 'True'
+sys.exit()
 
 with open('docs/doc-requirements.txt','r') as f:
     requirements = f.readlines()
@@ -90,9 +118,3 @@ setup(
     
     #scripts=['bin/wrap.sh'],
 )
-
-
-
-
-
-
