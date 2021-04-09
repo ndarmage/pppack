@@ -3,6 +3,10 @@
 # this means the script will run successfully only if executed at pppack/lib
 dir=../../src/
 hme=$(pwd)
+if [[ ! $hme == *"pppack/lib"* ]]; then
+    echo "ERROR, this script must be used from .../pppack/lib"
+    exit 1
+fi
 
 # concatenate all fortran sources and wrap the whole into a py module
 if [ -z "$1" ]; then

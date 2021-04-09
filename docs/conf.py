@@ -58,7 +58,7 @@ fortran_src = [
 # link to external documentation of other python modules
 intersphinx_mapping = {
     'numpy': ('https://numpy.org/doc/stable/'  , None),
-    'f2py' : ('https://numpy.org/doc/stable/f2py/', None)
+    # 'f2py' : ('https://numpy.org/doc/stable/f2py/', None)
 }
 
 # change the member order used by autodoc 
@@ -183,7 +183,7 @@ html_theme_options = {
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ['_static']  # currently empty
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
@@ -337,7 +337,7 @@ texinfo_no_detailmenu = False
 
 # Ignore some modules during documentation building on readthedocs.org
 on_rtd = os.environ.get('READTHEDOCS') == 'True'
-if on_rtd and True:
+if on_rtd:
 
     try:
         from unittest.mock import MagicMock # Python 3.3

@@ -1,6 +1,6 @@
-include bin/wrap.sh
+include bin/*
 include README.rst
 include LICENSE.txt
 include CHANGES.txt
-recursive-include pppack *.so *.py
+recursive-include pppack *.so *.pyd *.py
 recursive-exclude src *.f90
