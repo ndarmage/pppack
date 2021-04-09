@@ -342,11 +342,12 @@ if on_rtd:
 
     from unittest import mock
 
-    MOCK_MODULES = ['lib.pppack',
-                    'lib.chebyshev_interp_1d',
-                   #'lib.divdif',
-                   #'numpy',
-                   ]
+    autodoc_mock_imports = [
+        'lib.pppack',
+        'lib.chebyshev_interp_1d',
+       #'lib.divdif',
+       #'numpy',
+    ]
 
-    for mod_name in MOCK_MODULES:
+    for mod_name in autodoc_mock_imports:
         sys.modules[mod_name] = mock.Mock()
