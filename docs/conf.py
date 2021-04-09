@@ -337,16 +337,10 @@ texinfo_no_detailmenu = False
 
 # Ignore some modules during documentation building on readthedocs.org
 on_rtd = os.environ.get('READTHEDOCS') == 'True'
+
 if on_rtd:
 
-    try:
-        from unittest.mock import MagicMock # Python 3.3
-    except ImportError:
-        from mock import Mock as MagicMock
-
-    class Mock(MagicMock):
-        @classmethod
-        def __getattr__(cls, name): return MagicMock()
+    from unittest import mock
 
     MOCK_MODULES = ['lib.pppack',
                     'lib.chebyshev_interp_1d',
@@ -354,5 +348,5 @@ if on_rtd:
                    #'numpy',
                    ]
 
-    sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
-
+    for mod_name in MOCK_MODULES:
+        sys.modules[mod_name] = mock.Mock()
