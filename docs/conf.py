@@ -343,6 +343,7 @@ if on_rtd:
     from unittest import mock
 
     autodoc_mock_imports = [
+        'lib',
         'lib.pppack',
         'lib.chebyshev_interp_1d',
        #'lib.divdif',
