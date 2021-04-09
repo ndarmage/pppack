@@ -5,7 +5,7 @@ here = path.abspath(path.dirname(__file__))
 import setuptools
 
 # to use f2py extensions
-from numpy.distutils.core import setup,  Extension
+from numpy.distutils.core import setup, Extension
 
 import setuptools
 
@@ -50,22 +50,22 @@ if on_rtd:
 
 setup(
     name = pkgname,
-    version = pkgversion+'.post1',
-    
-    description       = 'A Python Piecewise Polynomial Package',
+    version = pkgversion + '.post1',
+
+    description = 'A Python Piecewise Polynomial Package',
     long_description = long_description,
-    
-    author            = 'Daniele Tomatis',
-    author_email      = 'daniele.tomatis@gmail.com', # google groups ?
-    
-    url='https://github.com/ndarmage/pppack',
-    
+
+    author = 'Daniele Tomatis',
+    author_email = 'daniele.tomatis@gmail.com',
+
+    url = 'https://github.com/ndarmage/pppack',
+
     ext_modules = ext_mods,
-    
-    license='MIT',
-    
+
+    license = 'MIT',
+
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
-    classifiers=[
+    classifiers = [
         'Development Status :: 3 - Alpha',
         'Environment :: Console',
         'Intended Audience :: Science/Research',
@@ -73,20 +73,20 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.9',
         'Topic :: Software Development :: Build Tools',
         'Programming Language :: Fortran',
         'Topic :: Scientific/Engineering',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    
-    keywords=['multivariate polynomial','splines','fortran'],
-    
-    packages=['pppack'],
 
-    install_requires=requirements,
+    keywords = ['multivariate polynomial', 'splines', 'fortran'],
+
+    packages = ['pppack'],
+
+    install_requires = requirements,
     
-    include_package_data=True,
+    include_package_data = True,
     
     #scripts=['bin/wrap.sh'],
 )
