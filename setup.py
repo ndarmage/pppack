@@ -24,7 +24,7 @@ ext3 = Extension(name = 'pppack.lib.divdif',
                  sources = ['src/divdif/divdif.pyf','src/divdif/f90/divdif.f90'],
                  define_macros = [('DF2PY_REPORT_ON_ARRAY_COPY',''),],
                  )
-ext_mods = [ext1, ext2, ext3]
+
 
 def get_value(ifile, *args):
     "extract value of args keys in module ifile"
@@ -60,21 +60,22 @@ if on_rtd:
     mainfile = os.path.join(here, 'pppack', 'pppack.py')
     pkgversion = get_value(mainfile, '__version__')[0]
     pkgname = get_value(mainfile, '__version__')[0]
+
+    ext_mods = []
 else:
     from pppack.pppack import __version__ as pkgversion
     from pppack.pppack import __title__ as pkgname
 
+    ext_mods = [ext1, ext2, ext3]
+
 
 sys.path.extend('config_fc --fcompiler=gnu95'.split())
-sys.exit()
 
-with open('docs/doc-requirements.txt','r') as f:
+
+with open('docs/doc-requirements.txt', 'r') as f:
     requirements = f.readlines()
     requirements = [r.replace('\n','') for r in requirements]
 
-if on_rtd:
-    #requirements = [r for r in requirements if not 'numpy' in r]
-    ext_mods = []
 
 setup(
     name = pkgname,
