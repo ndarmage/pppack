@@ -237,7 +237,7 @@ class S(Fd):
         tstar = np.zeros((np1,), order='F')
         for i in range(np1):
             tstar[i] = np.sum(self.t[i+1:i+self.k])
-        tstar /= float(self.k-1)
+        tstar /= float(self.k - 1)
         return tstar
 
     def tau4Ik(self, k_is_even=True):
