@@ -33,7 +33,8 @@ cd $hme
 
 # add directives before calling f2py
 echo "produce the signature file"
-f2py $lib/f90/$1.f90 -m $1 -h $lib/$1.pyf --overwrite-signature $libopt
+fpy="python -m numpy.f2py"
+$fpy $lib/f90/$1.f90 -m $1 -h $lib/$1.pyf --overwrite-signature $libopt
 #
 echo "produce the so lib"
-f2py -c --fcompiler=gnu95 -DF2PY_REPORT_ON_ARRAY_COPY --build-dir $lib/cc_$1/ $lib/$1.pyf $lib/f90/$1.f90 $libopt
+$fpy -c --fcompiler=gnu95 -DF2PY_REPORT_ON_ARRAY_COPY --build-dir $lib/cc_$1/ $lib/$1.pyf $lib/f90/$1.f90 $libopt
