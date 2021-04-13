@@ -4,5 +4,5 @@
 export lib=$(basename $PWD)
 
 # add directives before calling f2py
-f2py src/f90/$lib.f90 -m $lib -h $lib.pyf --overwrite-signature
-f2py -c $lib.pyf src/f90/$lib.f90
+python3 -m numpy.f2py f90/$lib.f90 -m $lib -h $lib.pyf --overwrite-signature
+python3 -m numpy.f2py -c -fcompiler=gnu95 $lib.pyf f90/$lib.f90

@@ -128,6 +128,8 @@ subroutine handle ( input_file )
   integer ( kind = 4 ) duplicate_num
   character ( len = 255 ) extension
   logical f90_line_is_end
+  logical f90_line_is_interface
+  logical f90_line_ends_interface
   integer ( kind = 4 ) i
   character ( len = 255 ) input_file
   integer ( kind = 4 ) input_unit
@@ -146,6 +148,7 @@ subroutine handle ( input_file )
   logical no_name_open
   integer ( kind = 4 ) no_name_unit
   logical output_exists
+  logical in_interface
   character ( len = 255 ) output_file
   logical output_open
   integer ( kind = 4 ) output_unit
@@ -186,6 +189,7 @@ subroutine handle ( input_file )
   module_num = 0
 
   output_open = .false.
+  in_interface = .false.
 
   no_name_open = .false.
   no_name = .true.
@@ -298,6 +302,18 @@ subroutine handle ( input_file )
 
     end if
 !
+!  Check if line marks the beginning or end of an interface
+!
+    if ( in_interface ) then
+      if ( f90_line_ends_interface ( line ) ) then
+        in_interface = .false.
+      end if
+    else
+      if ( f90_line_is_interface ( line ) ) then
+        in_interface = .true.
+      end if
+    end if
+!
 !  Write the line.
 !
     if ( output_open ) then
@@ -308,10 +324,11 @@ subroutine handle ( input_file )
       no_name_line_num = no_name_line_num + 1
     end if
 
-    if ( f90_line_is_end ( line ) ) then
+    if ( f90_line_is_end ( line ) .and. .not. in_interface ) then
       close ( unit = output_unit )
       output_open = .false.
       no_name = .false.
+      in_interface = .false.
     end if
 
   end do
@@ -531,9 +548,9 @@ subroutine f90_line_is_begin ( line, name )
   implicit none
 
   integer ( kind = 4 ) i
-  character ( len = * ) line
+  character ( len = * ), intent(in) :: line
   character ( len = 255 ) line2
-  character ( len = * ) name
+  character ( len = * ), intent(out) :: name
   logical s_eqi
 
   name = ' '
@@ -588,6 +605,98 @@ subroutine f90_line_is_begin ( line, name )
 
   return
 end
+function f90_line_is_interface ( line )
+
+!*****************************************************************************80
+!
+!! F90_LINE_IS_INTERFACE determines if a line starts a FORTRAN90 interface.
+!
+!  Licensing:
+!
+!    This code is distributed under the GNU LGPL license.
+!
+!  Modified:
+!
+!    13 April 2021
+!
+!  Author:
+!
+!    Daniele Tomatis
+!
+!  Parameters:
+!
+!    Input, character ( len = * ) LINE, a line of text.
+!
+!    Output, logical F90_LINE_IS_INTERFACE, TRUE if the line starts an interface.
+!
+  implicit none
+
+  logical :: f90_line_is_interface
+  character ( len = * ), intent(in) :: line
+  character ( len = 255 ) line2
+
+  f90_line_is_interface = .false.
+
+  line2 = line
+
+  call s_low ( line2 )
+
+  call s_blank_delete ( line2 )
+
+  if ( line2(1:9) == 'interface' ) then
+
+    f90_line_is_interface = .true.
+
+  end if
+
+  return
+end
+function f90_line_ends_interface ( line )
+
+!*****************************************************************************80
+!
+!! F90_LINE_ENDS_INTERFACE determines if a line ends a FORTRAN90 interface.
+!
+!  Licensing:
+!
+!    This code is distributed under the GNU LGPL license.
+!
+!  Modified:
+!
+!    13 April 2021
+!
+!  Author:
+!
+!    Daniele Tomatis
+!
+!  Parameters:
+!
+!    Input, character ( len = * ) LINE, a line of text.
+!
+!    Output, logical F90_LINE_ENDS_INTERFACE, TRUE if the line ends an interface.
+!
+  implicit none
+
+  logical :: f90_line_ends_interface
+  character ( len = * ), intent(in) :: line
+  character ( len = 255 ) line2
+
+  f90_line_ends_interface = .false.
+
+  line2 = line
+
+  call s_low ( line2 )
+
+  call s_blank_delete ( line2 )
+
+  if ( line2(1:12) == 'endinterface' ) then
+
+    f90_line_ends_interface = .true.
+
+  end if
+
+  return
+end
 function f90_line_is_end ( line )
 
 !*****************************************************************************80
@@ -614,8 +723,8 @@ function f90_line_is_end ( line )
 !
   implicit none
 
-  logical f90_line_is_end
-  character ( len = * ) line
+  logical :: f90_line_is_end
+  character ( len = * ), intent(in) :: line
   character ( len = 255 ) line2
 
   f90_line_is_end = .false.

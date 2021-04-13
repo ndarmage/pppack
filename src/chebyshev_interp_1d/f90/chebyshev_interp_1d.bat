@@ -3,9 +3,16 @@
 REM for /F %%i in ("%cd%") do set "libname=%%~ni"
 set libname=%~n0
 
+set fsplit=..\..\..\..\bin\f90split
+
 mkdir temp
 cd temp
-..\..\..\f90split\f90split.exe ..\%libname%.f90
+
+if not exist %fsplit% (
+    echo missing %fsplit% from %cd%
+    exit /b 1
+)
+%fsplit% ..\%libname%.f90
 
 for /F %%i in ('dir /b *.f90') do gfortran -c %%i
 	

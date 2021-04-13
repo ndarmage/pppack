@@ -3,39 +3,39 @@
 
 python module pppack ! in 
     interface  ! in :pppack
-        module ppcolloc_data ! in :pppack:../../src/pppack/f90/pppack.f90
-            real(kind=8) dimension(2000) :: coef
-            integer(kind=4), parameter,optional :: ncoef=2000
-            real(kind=8) dimension(100) :: breaks
+        module ppcolloc_data ! in :pppack:f90/pppack.f90
             integer(kind=4), parameter,optional :: npiece=100
+            integer(kind=4), parameter,optional :: ncoef=2000
             integer(kind=4) :: l
             integer(kind=4) :: kpm
+            real(kind=8) dimension(100) :: breaks
+            real(kind=8) dimension(2000) :: coef
         end module ppcolloc_data
-        module colloc_data ! in :pppack:../../src/pppack/f90/pppack.f90
-            real(kind=8) dimension(20) :: xside
-            integer(kind=4) :: iside
-            real(kind=8) dimension(19) :: rho
+        module colloc_data ! in :pppack:f90/pppack.f90
             integer(kind=4) :: itermx
             integer(kind=4) :: k
+            real(kind=8) dimension(19) :: rho
             integer(kind=4) :: m
+            integer(kind=4) :: iside
+            real(kind=8) dimension(20) :: xside
         end module colloc_data
-        module l2approx_data ! in :pppack:../../src/pppack/f90/pppack.f90
+        module l2approx_data ! in :pppack:f90/pppack.f90
             integer(kind=4), parameter,optional :: ltkmax=2000
-            real(kind=8) dimension(100) :: breaks
             integer(kind=4), parameter,optional :: lpkmax=100
-            real(kind=8) dimension(2000) :: coef
-            integer(kind=4) :: k
             integer(kind=4) :: l
+            integer(kind=4) :: k
+            real(kind=8) dimension(100) :: breaks
+            real(kind=8) dimension(2000) :: coef
         end module l2approx_data
-        module l2ir_data ! in :pppack:../../src/pppack/f90/pppack.f90
-            integer(kind=4) :: ntau
-            real(kind=8) dimension(200) :: tau
-            real(kind=8) dimension(200) :: weight
+        module l2ir_data ! in :pppack:f90/pppack.f90
             integer(kind=4), parameter,optional :: ntmax=200
+            integer(kind=4) :: ntau
             real(kind=8) :: totalw
+            real(kind=8) dimension(200) :: tau
             real(kind=8) dimension(200) :: gtau
+            real(kind=8) dimension(200) :: weight
         end module l2ir_data
-        subroutine banfac(w,nroww,nrow,nbandl,nbandu,iflag) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine banfac(w,nroww,nrow,nbandl,nbandu,iflag) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(nroww,nrow),intent(inout) :: w
             integer(kind=4), optional,intent(in),check(shape(w,0)==nroww),depend(w) :: nroww=shape(w,0)
             integer(kind=4), optional,intent(in),check(shape(w,1)==nrow),depend(w) :: nrow=shape(w,1)
@@ -43,7 +43,7 @@ python module pppack ! in
             integer(kind=4) intent(in) :: nbandu
             integer(kind=4) intent(out) :: iflag
         end subroutine banfac
-        subroutine banslv(w,nroww,nrow,nbandl,nbandu,b) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine banslv(w,nroww,nrow,nbandl,nbandu,b) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(nroww,nrow),intent(in) :: w
             integer(kind=4), optional,intent(in),check(shape(w,0)==nroww),depend(w) :: nroww=shape(w,0)
             integer(kind=4), optional,intent(in),check(shape(w,1)==nrow),depend(w) :: nrow=shape(w,1)
@@ -51,19 +51,19 @@ python module pppack ! in
             integer(kind=4) intent(in) :: nbandu
             real(kind=8) dimension(nrow),intent(inout),depend(nrow) :: b
         end subroutine banslv
-        subroutine bchfac(w,nbands,nrow,diag) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine bchfac(w,nbands,nrow,diag) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(nbands,nrow),intent(inout) :: w
             integer(kind=4), optional,intent(in),check(shape(w,0)==nbands),depend(w) :: nbands=shape(w,0)
             integer(kind=4), optional,intent(in),check(shape(w,1)==nrow),depend(w) :: nrow=shape(w,1)
             real(kind=8) dimension(nrow),intent(out),depend(nrow) :: diag
         end subroutine bchfac
-        subroutine bchslv(w,nbands,nrow,b) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine bchslv(w,nbands,nrow,b) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(nbands,nrow),intent(in) :: w
             integer(kind=4), optional,intent(in),check(shape(w,0)==nbands),depend(w) :: nbands=shape(w,0)
             integer(kind=4), optional,intent(in),check(shape(w,1)==nrow),depend(w) :: nrow=shape(w,1)
             real(kind=8) dimension(nrow),intent(inout),depend(nrow) :: b
         end subroutine bchslv
-        subroutine bsplpp(t,bcoef,n,k,scrtch,breaks,coef,l) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine bsplpp(t,bcoef,n,k,scrtch,breaks,coef,l) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(n+k),intent(in),depend(n,k) :: t
             real(kind=8) dimension(n),intent(in) :: bcoef
             integer(kind=4), optional,intent(in),check(len(bcoef)>=n),depend(bcoef) :: n=len(bcoef)
@@ -73,7 +73,7 @@ python module pppack ! in
             real(kind=8) dimension(k,n),intent(out),depend(k,n) :: coef
             integer(kind=4) intent(out) :: l
         end subroutine bsplpp
-        subroutine bsplvb(t,jhigh,index_bn,x,left,biatx) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine bsplvb(t,jhigh,index_bn,x,left,biatx) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(left+jhigh),intent(in),depend(jhigh,left) :: t
             integer(kind=4) intent(in) :: jhigh
             integer(kind=4) intent(in) :: index_bn
@@ -81,7 +81,7 @@ python module pppack ! in
             integer(kind=4) intent(in) :: left
             real(kind=8) dimension(jhigh),intent(out),depend(jhigh) :: biatx
         end subroutine bsplvb
-        subroutine bsplvd(t,k,x,left,a,dbiatx,nderiv) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine bsplvd(t,k,x,left,a,dbiatx,nderiv) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(left+k),intent(in),depend(k,left) :: t
             integer(kind=4) intent(in) :: k
             real(kind=8) intent(in) :: x
@@ -90,7 +90,7 @@ python module pppack ! in
             real(kind=8) dimension(k,nderiv),intent(out),depend(k,nderiv) :: dbiatx
             integer(kind=4) intent(in) :: nderiv
         end subroutine bsplvd
-        subroutine bspp2d(t,bcoef,n,k,m,scrtch,breaks,coef,l) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine bspp2d(t,bcoef,n,k,m,scrtch,breaks,coef,l) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(n+k),intent(in),depend(n,k) :: t
             real(kind=8) dimension(n,m),intent(in) :: bcoef
             integer(kind=4), optional,intent(in),check(shape(bcoef,0)==n),depend(bcoef) :: n=shape(bcoef,0)
@@ -101,7 +101,7 @@ python module pppack ! in
             real(kind=8) dimension(m,k,*),intent(out),depend(m,k) :: coef
             integer(kind=4) intent(out) :: l
         end subroutine bspp2d
-        function bvalue(t,bcoef,n,k,x,jderiv) ! in :pppack:../../src/pppack/f90/pppack.f90
+        function bvalue(t,bcoef,n,k,x,jderiv) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(n+k),intent(in),depend(n,k) :: t
             real(kind=8) dimension(n),intent(in) :: bcoef
             integer(kind=4), optional,intent(in),check(len(bcoef)>=n),depend(bcoef) :: n=len(bcoef)
@@ -110,7 +110,7 @@ python module pppack ! in
             integer(kind=4) intent(in) :: jderiv
             real(kind=8) :: bvalue
         end function bvalue
-        subroutine bvalnd(t,bcoef,n,m,k,x,jderiv,bvalue) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine bvalnd(t,bcoef,n,m,k,x,jderiv,bvalue) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(n+k),intent(in),depend(n,k) :: t
             real(kind=8) dimension(*,*),intent(in) :: bcoef
             integer(kind=4), optional,intent(in),depend(bcoef) :: n=shape(bcoef,0)
@@ -120,7 +120,7 @@ python module pppack ! in
             integer(kind=4) intent(in) :: jderiv
             real(kind=8) dimension(m),intent(out),depend(m) :: bvalue
         end subroutine bvalnd
-        subroutine chol1d(p,v,qty,npoint,ncol,u,qu) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine chol1d(p,v,qty,npoint,ncol,u,qu) ! in :pppack:f90/pppack.f90
             real(kind=8) intent(in) :: p
             real(kind=8) dimension(npoint,7),intent(inout) :: v
             real(kind=8) dimension(npoint),intent(in),depend(npoint) :: qty
@@ -129,9 +129,9 @@ python module pppack ! in
             real(kind=8) dimension(npoint),intent(out),depend(npoint) :: u
             real(kind=8) dimension(npoint),intent(out),depend(npoint) :: qu
         end subroutine chol1d
-        subroutine colloc(aleft,aright,lbegin,iorder,ntimes,addbrk,relerr) ! in :pppack:../../src/pppack/f90/pppack.f90
-            use colloc_data
+        subroutine colloc(aleft,aright,lbegin,iorder,ntimes,addbrk,relerr) ! in :pppack:f90/pppack.f90
             use ppcolloc_data
+            use colloc_data
             real(kind=8) intent(in) :: aleft
             real(kind=8) intent(in) :: aright
             integer(kind=4) intent(in) :: lbegin
@@ -140,18 +140,18 @@ python module pppack ! in
             real(kind=8) intent(in) :: addbrk
             real(kind=8) intent(in) :: relerr
         end subroutine colloc
-        subroutine colpnt(k,rho) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine colpnt(k,rho) ! in :pppack:f90/pppack.f90
             integer(kind=4) intent(in) :: k
             real(kind=8) dimension(k),intent(out),depend(k) :: rho
         end subroutine colpnt
-        subroutine cubspl(tau,c,n,ibcbeg,ibcend) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine cubspl(tau,c,n,ibcbeg,ibcend) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(n),intent(in) :: tau
             real(kind=8) dimension(4,n),intent(inout),depend(n) :: c
             integer(kind=4), optional,intent(in),check(len(tau)>=n),depend(tau) :: n=len(tau)
             integer(kind=4) intent(in) :: ibcbeg
             integer(kind=4) intent(in) :: ibcend
         end subroutine cubspl
-        subroutine cwidth(w,b,nequ,ncols,integs,nbloks,d,x,iflag) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine cwidth(w,b,nequ,ncols,integs,nbloks,d,x,iflag) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(nequ,ncols) :: w
             real(kind=8) dimension(nequ),intent(inout),depend(nequ) :: b
             integer(kind=4), optional,intent(in),check(shape(w,0)==nequ),depend(w) :: nequ=shape(w,0)
@@ -162,14 +162,14 @@ python module pppack ! in
             real(kind=8) dimension(nequ),intent(out),depend(nequ) :: x
             integer(kind=4) intent(out) :: iflag
         end subroutine cwidth
-        subroutine difequ(mode,xx,v) ! in :pppack:../../src/pppack/f90/pppack.f90
-            use colloc_data
+        subroutine difequ(mode,xx,v) ! in :pppack:f90/pppack.f90
             use ppcolloc_data
+            use colloc_data
             integer(kind=4) intent(in) :: mode
             real(kind=8) intent(in) :: xx
             real(kind=8) dimension(20),intent(out) :: v
         end subroutine difequ
-        subroutine dtblok(bloks,integs,nbloks,ipivot,iflag,detsgn,detlog) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine dtblok(bloks,integs,nbloks,ipivot,iflag,detsgn,detlog) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(*),intent(in) :: bloks
             integer(kind=4) dimension(3,nbloks),intent(in) :: integs
             integer(kind=4), optional,intent(in),check(shape(integs,1)==nbloks),depend(integs) :: nbloks=shape(integs,1)
@@ -178,7 +178,7 @@ python module pppack ! in
             real(kind=8) intent(out) :: detsgn
             real(kind=8) intent(out) :: detlog
         end subroutine dtblok
-        subroutine eqblok(t,n,kpm,work1,work2,bloks,lenblk,integs,nbloks,b) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine eqblok(t,n,kpm,work1,work2,bloks,lenblk,integs,nbloks,b) ! in :pppack:f90/pppack.f90
             use colloc_data
             real(kind=8) dimension(n+kpm),intent(in),depend(n,kpm) :: t
             integer(kind=4) intent(in) :: n
@@ -191,7 +191,7 @@ python module pppack ! in
             integer(kind=4) intent(out) :: nbloks
             real(kind=8) dimension(*),intent(out) :: b
         end subroutine eqblok
-        subroutine evnnot(breaks,coef,l,k,brknew,lnew,coefg) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine evnnot(breaks,coef,l,k,brknew,lnew,coefg) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(l + 1),intent(in) :: breaks
             real(kind=8) dimension(k,l),intent(in),depend(l) :: coef
             integer(kind=4), optional,intent(in),check((len(breaks)-1)>=l),depend(breaks) :: l=(len(breaks)-1)
@@ -200,7 +200,7 @@ python module pppack ! in
             integer(kind=4) intent(in) :: lnew
             real(kind=8) dimension(2,l),intent(out),depend(l) :: coefg
         end subroutine evnnot
-        subroutine factrb(w,ipivot,d,nrow,ncol,last,iflag) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine factrb(w,ipivot,d,nrow,ncol,last,iflag) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(nrow,ncol),intent(inout) :: w
             integer(kind=4) dimension(nrow),intent(out),depend(nrow) :: ipivot
             real(kind=8) dimension(nrow),intent(out),depend(nrow) :: d
@@ -209,7 +209,7 @@ python module pppack ! in
             integer(kind=4) intent(in) :: last
             integer(kind=4) intent(inout) :: iflag
         end subroutine factrb
-        subroutine fcblok(bloks,integs,nbloks,ipivot,scrtch,iflag) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine fcblok(bloks,integs,nbloks,ipivot,scrtch,iflag) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(*),intent(inout) :: bloks
             integer(kind=4) dimension(3,nbloks),intent(in) :: integs
             integer(kind=4), optional,intent(in),check(shape(integs,1)==nbloks),depend(integs) :: nbloks=shape(integs,1)
@@ -217,14 +217,14 @@ python module pppack ! in
             real(kind=8) dimension(*),intent(out) :: scrtch
             integer(kind=4) intent(out) :: iflag
         end subroutine fcblok
-        subroutine interv(xt,lxt,x,left,mflag) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine interv(xt,lxt,x,left,mflag) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(lxt),intent(in) :: xt
             integer(kind=4), optional,intent(in),check(len(xt)>=lxt),depend(xt) :: lxt=len(xt)
             real(kind=8) intent(in) :: x
             integer(kind=4) intent(out) :: left
             integer(kind=4) intent(out) :: mflag
         end subroutine interv
-        subroutine knots(breaks,l,kpm,m,t,n) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine knots(breaks,l,kpm,m,t,n) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(l + 1),intent(in) :: breaks
             integer(kind=4), optional,intent(in),check((len(breaks)-1)>=l),depend(breaks) :: l=(len(breaks)-1)
             integer(kind=4) intent(in) :: kpm
@@ -232,7 +232,7 @@ python module pppack ! in
             real(kind=8) dimension(l*kpm+kpm-l*m+m),intent(out),depend(l,kpm,m) :: t
             integer(kind=4) intent(out) :: n
         end subroutine knots
-        subroutine l2appr(t,n,k,q,diag,bcoef) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine l2appr(t,n,k,q,diag,bcoef) ! in :pppack:f90/pppack.f90
             use l2ir_data
             real(kind=8) dimension(n+k),intent(in),depend(n,k) :: t
             integer(kind=4) intent(in) :: n
@@ -241,7 +241,7 @@ python module pppack ! in
             real(kind=8) dimension(n),intent(out),depend(n) :: diag
             real(kind=8) dimension(n),intent(out),depend(n) :: bcoef
         end subroutine l2appr
-        subroutine l2err(iprfun,breaks,coef,l,k,ntau,tau,gtau,weight,ftau,error) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine l2err(iprfun,breaks,coef,l,k,ntau,tau,gtau,weight,ftau,error) ! in :pppack:f90/pppack.f90
             integer(kind=4) intent(in) :: iprfun
             real(kind=8) dimension(l + 1),intent(in) :: breaks
             real(kind=8) dimension(k,l),intent(in),depend(l) :: coef
@@ -254,14 +254,14 @@ python module pppack ! in
             real(kind=8) dimension(ntau),intent(out),depend(ntau) :: ftau
             real(kind=8) dimension(ntau),intent(out),depend(ntau) :: error
         end subroutine l2err
-        subroutine l2knts(breaks,l,k,t,n) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine l2knts(breaks,l,k,t,n) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(l + 1),intent(in) :: breaks
             integer(kind=4), optional,intent(in),check((len(breaks)-1)>=l),depend(breaks) :: l=(len(breaks)-1)
             integer(kind=4) intent(in) :: k
             real(kind=8) dimension(k-1+l+k),intent(out),depend(l,k) :: t
             integer(kind=4) intent(out) :: n
         end subroutine l2knts
-        subroutine newnot(breaks,coef,l,k,brknew,lnew,coefg) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine newnot(breaks,coef,l,k,brknew,lnew,coefg) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(l + 1),intent(in) :: breaks
             real(kind=8) dimension(k,l),intent(in),depend(l) :: coef
             integer(kind=4), optional,intent(in),check((len(breaks)-1)>=l),depend(breaks) :: l=(len(breaks)-1)
@@ -270,7 +270,7 @@ python module pppack ! in
             integer(kind=4) intent(in) :: lnew
             real(kind=8) dimension(2,l),intent(out),depend(l) :: coefg
         end subroutine newnot
-        function ppvalu(breaks,coef,l,k,x,jderiv) ! in :pppack:../../src/pppack/f90/pppack.f90
+        function ppvalu(breaks,coef,l,k,x,jderiv) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(l + 1),intent(in) :: breaks
             real(kind=8) dimension(k,l),intent(in),depend(l) :: coef
             integer(kind=4), optional,intent(in),check((len(breaks)-1)>=l),depend(breaks) :: l=(len(breaks)-1)
@@ -279,7 +279,7 @@ python module pppack ! in
             integer(kind=4) intent(in) :: jderiv
             real(kind=8) :: ppvalu
         end function ppvalu
-        subroutine putit(t,kpm,left,scrtch,dbiatx,q,nrow,b) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine putit(t,kpm,left,scrtch,dbiatx,q,nrow,b) ! in :pppack:f90/pppack.f90
             use colloc_data
             real(kind=8) dimension(left+kpm),intent(in),depend(kpm,left) :: t
             integer(kind=4), optional,intent(in),check(shape(dbiatx,0)==kpm),depend(dbiatx) :: kpm=shape(dbiatx,0)
@@ -290,25 +290,25 @@ python module pppack ! in
             integer(kind=4) intent(in) :: nrow
             real(kind=8) dimension(nrow),intent(out),depend(nrow) :: b
         end subroutine putit
-        subroutine r8vec_print(n,a,title) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine r8vec_print(n,a,title) ! in :pppack:f90/pppack.f90
             integer(kind=4), optional,intent(in),check(len(a)>=n),depend(a) :: n=len(a)
             real(kind=8) dimension(n),intent(in) :: a
             character*(*) intent(in) :: title
         end subroutine r8vec_print
-        function round(x,size_bn) ! in :pppack:../../src/pppack/f90/pppack.f90
+        function round(x,size_bn) ! in :pppack:f90/pppack.f90
             real(kind=8) intent(in) :: x
             real(kind=8) intent(in) :: size_bn
             real(kind=8) :: round
         end function round
-        subroutine sbblok(bloks,integs,nbloks,ipivot,b,x) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine sbblok(bloks,integs,nbloks,ipivot,b,x) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(*),intent(in) :: bloks
             integer(kind=4) dimension(3,nbloks),intent(in) :: integs
             integer(kind=4), optional,intent(in),check(shape(integs,1)==nbloks),depend(integs) :: nbloks=shape(integs,1)
             integer(kind=4) dimension(*),intent(in) :: ipivot
-            real(kind=8) dimension(*),intent(in) :: b
+            real(kind=8) dimension(*),intent(inout) :: b
             real(kind=8) dimension(*),intent(out) :: x
         end subroutine sbblok
-        subroutine setupq(x,dx,y,npoint,v,qty) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine setupq(x,dx,y,npoint,v,qty) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(npoint),intent(in) :: x
             real(kind=8) dimension(npoint),intent(in),depend(npoint) :: dx
             real(kind=8) dimension(npoint),intent(in),depend(npoint) :: y
@@ -316,7 +316,7 @@ python module pppack ! in
             real(kind=8) dimension(npoint,7),intent(out),depend(npoint) :: v
             real(kind=8) dimension(npoint),intent(out),depend(npoint) :: qty
         end subroutine setupq
-        subroutine shiftb(ai,ipivot,nrowi,ncoli,last,ai1,nrowi1,ncoli1) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine shiftb(ai,ipivot,nrowi,ncoli,last,ai1,nrowi1,ncoli1) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(nrowi,ncoli),intent(in) :: ai
             integer(kind=4) dimension(nrowi),intent(in),depend(nrowi) :: ipivot
             integer(kind=4), optional,intent(in),check(shape(ai,0)==nrowi),depend(ai) :: nrowi=shape(ai,0)
@@ -326,16 +326,16 @@ python module pppack ! in
             integer(kind=4), optional,intent(in),check(shape(ai1,0)==nrowi1),depend(ai1) :: nrowi1=shape(ai1,0)
             integer(kind=4), optional,intent(in),check(shape(ai1,1)==ncoli1),depend(ai1) :: ncoli1=shape(ai1,1)
         end subroutine shiftb
-        subroutine slvblk(bloks,integs,nbloks,b,ipivot,x,iflag) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine slvblk(bloks,integs,nbloks,b,ipivot,x,iflag) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(*),intent(inout) :: bloks
             integer(kind=4) dimension(3,nbloks),intent(in) :: integs
             integer(kind=4), optional,intent(in),check(shape(integs,1)==nbloks),depend(integs) :: nbloks=shape(integs,1)
-            real(kind=8) dimension(*),intent(in) :: b
+            real(kind=8) dimension(*),intent(inout) :: b
             integer(kind=4) dimension(*),intent(out) :: ipivot
             real(kind=8) dimension(*),intent(out) :: x
             integer(kind=4) intent(out) :: iflag
         end subroutine slvblk
-        subroutine smooth(x,y,dy,npoint,s,v,a,sfq) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine smooth(x,y,dy,npoint,s,v,a,sfq) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(npoint),intent(in) :: x
             real(kind=8) dimension(npoint),intent(in),depend(npoint) :: y
             real(kind=8) dimension(npoint),intent(in),depend(npoint) :: dy
@@ -345,7 +345,7 @@ python module pppack ! in
             real(kind=8) dimension(npoint,4),intent(out),depend(npoint) :: a
             real(kind=8) intent(out) :: sfq
         end subroutine smooth
-        subroutine spli2d(tau,gtau,t,n,k,m,work,q,bcoef,iflag) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine spli2d(tau,gtau,t,n,k,m,work,q,bcoef,iflag) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(n),intent(in),depend(n) :: tau
             real(kind=8) dimension(*,*),intent(in) :: gtau
             real(kind=8) dimension(n+k),intent(in),depend(n,k) :: t
@@ -357,7 +357,7 @@ python module pppack ! in
             real(kind=8) dimension(m,n),intent(out),depend(m,n) :: bcoef
             integer(kind=4) intent(out) :: iflag
         end subroutine spli2d
-        subroutine splint(tau,gtau,t,n,k,q,bcoef,iflag) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine splint(tau,gtau,t,n,k,q,bcoef,iflag) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(n),intent(in) :: tau
             real(kind=8) dimension(n),intent(in),depend(n) :: gtau
             real(kind=8) dimension(n+k),intent(in),depend(n,k) :: t
@@ -367,7 +367,7 @@ python module pppack ! in
             real(kind=8) dimension(n),intent(out),depend(n) :: bcoef
             integer(kind=4) intent(out) :: iflag
         end subroutine splint
-        subroutine splopt(tau,n,k,scrtch,t,iflag) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine splopt(tau,n,k,scrtch,t,iflag) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(n),intent(in) :: tau
             integer(kind=4), optional,intent(in),check(len(tau)>=n),depend(tau) :: n=len(tau)
             integer(kind=4) intent(in) :: k
@@ -375,7 +375,7 @@ python module pppack ! in
             real(kind=8) dimension(n+k),intent(out),depend(n,k) :: t
             integer(kind=4) intent(out) :: iflag
         end subroutine splopt
-        subroutine subbak(w,ipivot,nrow,ncol,last,x) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine subbak(w,ipivot,nrow,ncol,last,x) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(nrow,ncol),intent(in) :: w
             integer(kind=4) dimension(nrow),intent(in),depend(nrow) :: ipivot
             integer(kind=4), optional,intent(in),check(shape(w,0)==nrow),depend(w) :: nrow=shape(w,0)
@@ -383,7 +383,7 @@ python module pppack ! in
             integer(kind=4) intent(in) :: last
             real(kind=8) dimension(ncol),intent(inout),depend(ncol) :: x
         end subroutine subbak
-        subroutine subfor(w,ipivot,nrow,last,b,x) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine subfor(w,ipivot,nrow,last,b,x) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(nrow,last),intent(in) :: w
             integer(kind=4) dimension(nrow),intent(in),depend(nrow) :: ipivot
             integer(kind=4), optional,intent(in),check(shape(w,0)==nrow),depend(w) :: nrow=shape(w,0)
@@ -391,7 +391,7 @@ python module pppack ! in
             real(kind=8) dimension(nrow+nrow-last),intent(inout),depend(nrow,last) :: b
             real(kind=8) dimension(nrow),intent(out),depend(nrow) :: x
         end subroutine subfor
-        subroutine tautsp(tau,gtau,ntau,gamma,s,breaks,coef,l,k,iflag) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine tautsp(tau,gtau,ntau,gamma,s,breaks,coef,l,k,iflag) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(ntau),intent(in) :: tau
             real(kind=8) dimension(ntau),intent(in),depend(ntau) :: gtau
             integer(kind=4), optional,intent(in),check(len(tau)>=ntau),depend(tau) :: ntau=len(tau)
@@ -403,25 +403,25 @@ python module pppack ! in
             integer(kind=4) intent(out) :: k
             integer(kind=4) intent(out) :: iflag
         end subroutine tautsp
-        subroutine titand(t,g,n) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine titand(t,g,n) ! in :pppack:f90/pppack.f90
             real(kind=8) dimension(*),intent(out) :: t
             real(kind=8) dimension(*),intent(out) :: g
             integer(kind=4) intent(out) :: n
         end subroutine titand
-        subroutine newton_coef_1d(n,x,f,d) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine newton_coef_1d(n,x,f,d) ! in :pppack:f90/pppack.f90
             integer(kind=4), optional,intent(in),check(len(x)>=n),depend(x) :: n=len(x)
             real(kind=8) dimension(n),intent(in) :: x
             real(kind=8) dimension(n),intent(in),depend(n) :: f
             real(kind=8) dimension(n),intent(out),depend(n) :: d
         end subroutine newton_coef_1d
-        subroutine newton_coef_nd(n,m,x,f,d) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine newton_coef_nd(n,m,x,f,d) ! in :pppack:f90/pppack.f90
             integer(kind=4), optional,intent(in),depend(f) :: n=shape(f,0)
             integer(kind=4), optional,intent(in),check(n*m == shape(f,0)*shape(f,1)),depend(f,n) :: m=shape(f,1)
             real(kind=8) dimension(n),intent(in),depend(n) :: x
             real(kind=8) dimension(*,*),intent(in) :: f
             real(kind=8) dimension(m,n),intent(out),depend(m,n) :: d
         end subroutine newton_coef_nd
-        subroutine newton_value_1d(n,x,d,ni,xi,fi) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine newton_value_1d(n,x,d,ni,xi,fi) ! in :pppack:f90/pppack.f90
             integer(kind=4), optional,intent(in),check(len(x)>=n),depend(x) :: n=len(x)
             real(kind=8) dimension(n),intent(in) :: x
             real(kind=8) dimension(n),intent(in),depend(n) :: d
@@ -429,7 +429,7 @@ python module pppack ! in
             real(kind=8) dimension(ni),intent(in) :: xi
             real(kind=8) dimension(ni),intent(out),depend(ni) :: fi
         end subroutine newton_value_1d
-        subroutine newton_value_nd(n,m,x,d,xi,fi) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine newton_value_nd(n,m,x,d,xi,fi) ! in :pppack:f90/pppack.f90
             integer(kind=4), optional,intent(in),depend(d) :: n=shape(d,0)
             integer(kind=4), optional,intent(in),check(n*m == shape(d,0)*shape(d,1)),depend(d,n) :: m=shape(d,1)
             real(kind=8) dimension(n),intent(in),depend(n) :: x
@@ -437,13 +437,13 @@ python module pppack ! in
             real(kind=8) intent(in) :: xi
             real(kind=8) dimension(m),intent(out),depend(m) :: fi
         end subroutine newton_value_nd
-        subroutine r8vec2_print(n,a1,a2,title) ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine r8vec2_print(n,a1,a2,title) ! in :pppack:f90/pppack.f90
             integer(kind=4), optional,intent(in),check(len(a1)>=n),depend(a1) :: n=len(a1)
             real(kind=8) dimension(n),intent(in) :: a1
             real(kind=8) dimension(n),intent(in),depend(n) :: a2
             character*(*) intent(in) :: title
         end subroutine r8vec2_print
-        subroutine timestamp ! in :pppack:../../src/pppack/f90/pppack.f90
+        subroutine timestamp ! in :pppack:f90/pppack.f90
         end subroutine timestamp
     end interface 
 end python module pppack

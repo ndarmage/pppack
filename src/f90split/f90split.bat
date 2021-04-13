@@ -16,5 +16,6 @@ REM fi
 REM rm f90split.o
 
 gfortran -o f90split.exe f90split.f90
+copy f90split.exe ..\..\bin\f90split.exe
 
 echo "Normal end of execution."

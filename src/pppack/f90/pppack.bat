@@ -1,13 +1,18 @@
 @echo off
 
 set libname=%~n0
+set fsplit=..\..\..\..\bin\f90split.exe
 
 mkdir temp
 cd temp
 del *
-REM ~/bin/$ARCH/f90split ../${libname}.f90
+
+if not exist %fsplit% (
+    echo missing %fsplit% from %cd%
+    exit /b 1
+)
 REM the original file is pppack_orig.f90
-..\..\..\f90split\f90split.exe ..\%libname%.f90
+%fsplit% ..\%libname%.f90
 
 REM first compile modules
 set f90mods[0]=colloc_data.f90

@@ -1,14 +1,19 @@
 #!/bin/bash
 #export libname=$(basename $(dirname $(dirname $PWD)))
 export libname=$(basename $(dirname $PWD))
-#
+
+fsplit=../../../../bin/f90split
+
 mkdir temp
 cd temp
-rm *
-##~/bin/$ARCH/f90split ../${libname}.f90
+
+if [ ! -f $fsplit ]; then
+  echo "missing $fsplit from `pwd`"
+  exit 1
+fi
 # the original file is pppack_orig.f90
-f90split ../${libname}.f90
-#
+$fsplit ../${libname}.f90
+
 # first compile modules
 f90mods=(colloc_data.f90 l2approx_data.f90 l2ir_data.f90 ppcolloc_data.f90)
 for FILE in ${f90mods[@]}; do
@@ -18,6 +23,7 @@ for FILE in ${f90mods[@]}; do
     exit
   fi
 done
+
 # then the remaining f90 files
 for FILE in `ls -1 *.f90| grep -v data`;
 do
