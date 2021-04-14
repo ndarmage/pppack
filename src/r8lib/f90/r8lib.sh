@@ -1,11 +1,17 @@
 #!/bin/bash
 export libname=$(basename $(dirname $PWD))
 #export libname=$(basename $(dirname $(dirname $PWD)))
-#
+
+fsplit=../../../../bin/f90split
+
 mkdir temp
 cd temp
-rm *
-f90split ../${libname}.f90
+
+if [ ! -f $fsplit ]; then
+  echo "missing $fsplit in `pwd`"
+  exit 1
+fi
+$fsplit ../${libname}.f90
 #
 for FILE in `ls -1 *.f90`;
 do

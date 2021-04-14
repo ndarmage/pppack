@@ -1,5 +1,5 @@
 # Compiled python modules and C-extension.
-**/*.py[cod]
+**/*.py[codf]
 **/*.dll
 **/*.so
 
@@ -22,3 +22,10 @@
 /src/**/*.a
 /src/**/*.mod
 /src/**/*.exe
+/src/*/f90/*_prb_output.txt
+/src/pppack/**/*.orig
+/src/pppack/**/*.html
+
+# the bin folder can contain executables that must be recompiled on every machine
+/bin/f90split
+/bin/f90split.exe

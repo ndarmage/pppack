@@ -1,5 +1,8 @@
 #!/bin/bash
 
+force_recompile=true
+fpy="python3 -m numpy.f2py"
+
 # this means the script will run successfully only if executed at pppack/lib
 dir=../../src/
 hme=$(pwd)
@@ -27,14 +30,15 @@ fi
 
 # local compilation may be necessary before wrapping
 echo "compile the lib $1 on the local machine"
-cd $lib/f90
-./$1.sh
-cd $hme
+if $force_recompile ; then
+  cd $lib/f90
+  ./$1.sh
+  cd $hme
+fi
 
 # add directives before calling f2py
 echo "produce the signature file"
-fpy="python3 -m numpy.f2py"
 $fpy $lib/f90/$1.f90 -m $1 -h $lib/$1.pyf --overwrite-signature $libopt
-#
+
 echo "produce the so lib"
-$fpy -c --fcompiler=gnu95 -DF2PY_REPORT_ON_ARRAY_COPY --build-dir $lib/cc_$1/ $lib/$1.pyf $lib/f90/$1.f90 $libopt
+$fpy -c --fcompiler=gnu95 -DF2PY_REPORT_ON_ARRAY_COPY $lib/$1.pyf $lib/f90/$1.f90 $libopt

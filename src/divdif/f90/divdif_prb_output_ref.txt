@@ -893,7 +893,7 @@ TEST21
  
 TEST22
   DIF_BASIS_DERIVK computes difference tables for
-  the K-thderivative of each Lagrange basis.
+  the K-th derivative of each Lagrange basis.
  
   Lagrange basis K-derivative polynomial coefficients:
  
@@ -912,7 +912,7 @@ TEST22
          -   3.50000     * x
          +   5.91667    
  
-  P2'=-2x^2+13x_59/3
+  P2'=-2x^2+13x-59/3
  
   p(x) = -   2.00000     * x ^   2
          +   13.0000     * x

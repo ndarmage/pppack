@@ -16,7 +16,8 @@ $fsplit ../${libname}.f90
 
 # first compile modules
 f90mods=(colloc_data.f90 l2approx_data.f90 l2ir_data.f90 ppcolloc_data.f90)
-for FILE in ${f90mods[@]}; do
+for FILE in ${f90mods[@]};
+do
   gfortran -c $FILE
   if [ $? -ne 0 ]; then
     echo "Errors compiling " $FILE
@@ -25,7 +26,7 @@ for FILE in ${f90mods[@]}; do
 done
 
 # then the remaining f90 files
-for FILE in `ls -1 *.f90| grep -v data`;
+for FILE in $(ls -1 *.f90 | grep -v _data);
 do
   gfortran -c $FILE
   if [ $? -ne 0 ]; then
@@ -33,19 +34,18 @@ do
     exit
   fi
 done
-rm *.f90 *.mod
-#
+
 ar qc lib${libname}.a *.o
-rm *.o
-#
-##mv lib${libname}.a ~/lib/$ARCH
+# rm *.f90 *.mod *.o
+
+#mv lib${libname}.a ~/lib/$ARCH
 mv lib${libname}.a ../.
 cd ..
-rmdir temp
-#
-##echo "Library installed as ~/lib/$ARCH/lib${libname}.a"
+rm -R temp
+
+#echo "Library installed as ~/lib/$ARCH/lib${libname}.a"
 echo "Library installed as lib${libname}.a"
-#
+
 # test the library
 gfortran -o ${libname}_prb.exe ${libname}_prb.f90 ./lib${libname}.a
 ./${libname}_prb.exe > ${libname}_prb_output.txt
