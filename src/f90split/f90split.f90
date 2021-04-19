@@ -2,11 +2,9 @@ program main
 
 !*****************************************************************************80
 !
-!! MAIN is the main program for F90SPLIT.
+!! f90split() splits the modules of a FORTRAN file into separate files.
 !
 !  Discussion:
-!
-!    F90SPLIT splits the modules of a FORTRAN file into separate files.
 !
 !    A "module" is a blockdata, function, module, program, subroutine,
 !    recursive function or recursive subroutine program subunit.
@@ -15,7 +13,7 @@ program main
 !
 !      f90split extract.f90
 !
-!    processes the file EXTRACT.F90 line by line.  Each program subunit
+!    processes the file 'extract.f90' line by line.  Each program subunit
 !    that is found is written to a separate file whose name is derived
 !    from the name of the program subunit.  If the program subunit does
 !    not have a name, a default name is assigned.
@@ -25,13 +23,16 @@ program main
 !
 !      f90split *.f90
 !
+!    Thanks to Professor Daniele Tomatis for additional functions which enables
+!    the code to correctly process files that use the INTERFACE statement.
+!
 !  Licensing:
 !
 !    This code is distributed under the GNU LGPL license.
 !
 !  Modified:
 !
-!    23 August 2011
+!    18 April 2021
 !
 !  Author:
 !
@@ -48,10 +49,9 @@ program main
   if ( verbose ) then
     call timestamp ( )
     write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'F90SPLIT:'
+    write ( *, '(a)' ) 'f90split:'
     write ( *, '(a)' ) '  FORTRAN90 version'
-    write ( *, '(a)' ) '  Split a FORTRAN90 program, so that each'
-    write ( *, '(a)' ) '  unit is in its own file.'
+    write ( *, '(a)' ) '  Split a FORTRAN90 file into its components.'
   end if
 !
 !  Count the number of command line arguments.
@@ -61,7 +61,7 @@ program main
   if ( numarg < 1 ) then
 
     write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'F90SPLIT:'
+    write ( *, '(a)' ) 'f90split:'
     write ( *, '(a)' ) '  What is the name of the input file?'
     read ( *, '(a)' ) input_file
 
@@ -93,19 +93,18 @@ program main
 !
   if ( verbose ) then
     write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'F90SPLIT:'
+    write ( *, '(a)' ) 'f90split:'
     write ( *, '(a)' ) '  Normal end of execution.'
     write ( *, '(a)' ) ' '
     call timestamp ( )
   end if
 
-  stop
 end
 subroutine handle ( input_file )
 
 !*****************************************************************************80
 !
-!! HANDLE handles one file.
+!! handle() handles one file for f90split.
 !
 !  Licensing:
 !
@@ -119,9 +118,9 @@ subroutine handle ( input_file )
 !
 !    John Burkardt
 !
-!  Parameters:
+!  Input:
 !
-!    Input, character ( len = * ) INPUT_FILE, the name of the file to be split.
+!    character ( len = * ) INPUT_FILE: the name of the file to be split.
 !
   implicit none
 
@@ -129,8 +128,9 @@ subroutine handle ( input_file )
   character ( len = 255 ) extension
   logical f90_line_is_end
   logical f90_line_is_interface
-  logical f90_line_ends_interface
+  logical f90_line_is_interface_end
   integer ( kind = 4 ) i
+  logical in_interface
   character ( len = 255 ) input_file
   integer ( kind = 4 ) input_unit
   integer ( kind = 4 ) ios
@@ -148,7 +148,6 @@ subroutine handle ( input_file )
   logical no_name_open
   integer ( kind = 4 ) no_name_unit
   logical output_exists
-  logical in_interface
   character ( len = 255 ) output_file
   logical output_open
   integer ( kind = 4 ) output_unit
@@ -168,7 +167,7 @@ subroutine handle ( input_file )
     extension = ' '
   end if
 !
-!  Open the file.
+!  Open the input file.
 !
   call get_unit ( input_unit )
 
@@ -180,20 +179,26 @@ subroutine handle ( input_file )
     write ( *, '(a)' ) 'F90SPLIT - Fatal error!'
     write ( *, '(a)' ) &
       '  Could not open the input file "' // trim ( input_file ) // '".'
-    stop
+    stop 1
   end if
+!
+!  Open the no_name file.
+!
+  no_name_file = 'no_name.f90'
+!  write ( *, '(a)' ) trim ( no_name_file )
+  call get_unit ( no_name_unit )
+  open ( unit = no_name_unit, file = no_name_file, status = 'replace', &
+    iostat = ios )
+  no_name_open = .true.
 
   line_num = 0
+  no_name = .true.
   no_name_line_last = -1
   no_name_line_num = 0
   module_num = 0
 
   output_open = .false.
   in_interface = .false.
-
-  no_name_open = .false.
-  no_name = .true.
-  no_name_file = 'no_name.f90'
 
   line_length_max = -1;
   line_length_loc = -1;
@@ -215,7 +220,6 @@ subroutine handle ( input_file )
     end if
 !
 !  If we don't have a module name, then it's not clear what to do.
-!  My vote is to discard the information for now.
 !
 !  It's important to check whether the next line marks the beginning of
 !  a named module.
@@ -251,7 +255,7 @@ subroutine handle ( input_file )
 !
     if ( .not. output_open ) then
 
-      if ( 0 == len_trim ( line ) ) then
+      if ( len_trim ( line ) == 0 ) then
         cycle
       end if
 
@@ -260,14 +264,6 @@ subroutine handle ( input_file )
       if ( output_file == ' ' ) then
 
         no_name = .true.
-
-        if ( .not. no_name_open ) then
-          write ( *, '(a)' ) trim ( no_name_file )
-          call get_unit ( no_name_unit )
-          open ( unit = no_name_unit, file = no_name_file, status = 'replace', &
-            iostat = ios )
-          no_name_open = .true.
-        end if
 
       else
 
@@ -281,7 +277,9 @@ subroutine handle ( input_file )
           write ( *, '(a)' ) trim ( output_file )
         end if
 !
-!  Check for duplicates
+!  Check if there is already a file with this name.
+!  If so, the new output just goes to the "no_name" file.
+!  Otherwise, open a new file with this name.
 !
         inquire ( file = output_file, exist = output_exists )
 
@@ -289,23 +287,27 @@ subroutine handle ( input_file )
           duplicate_num = duplicate_num + 1
           write ( *, '(a)' ) '  Duplicate module = "' &
             // trim ( output_file ) // '".'
+          output_open = .false.
+
+        else
+
+          call get_unit ( output_unit )
+
+          open ( unit = output_unit, file = output_file, status = 'replace', &
+            iostat = ios )
+
+          output_open = .true.
+
         end if
-
-        call get_unit ( output_unit )
-
-        open ( unit = output_unit, file = output_file, status = 'replace', &
-          iostat = ios )
-
-        output_open = .true.
 
       end if
 
     end if
 !
-!  Check if line marks the beginning or end of an interface
+!  Check if line marks the beginning or end of an interface.
 !
     if ( in_interface ) then
-      if ( f90_line_ends_interface ( line ) ) then
+      if ( f90_line_is_interface_end ( line ) ) then
         in_interface = .false.
       end if
     else
@@ -333,16 +335,10 @@ subroutine handle ( input_file )
 
   end do
 !
-!  Close the NO_NAME file, and delete it.
-!  Rationale:
-!
-!    1) I don't write main programs without a PROGRAM statement.
-!    2) I don't stick blank or comment lines between routines.
-!    3) The stupid ALPHA fortran compiler will FAIL if given
-!       a file to compile that contains only blanks and comments!
+!  Close the NO_NAME file.
 !
   if ( no_name_open ) then
-    close ( unit = no_name_unit, status = 'delete' )
+    close ( unit = no_name_unit )
     no_name_open = .false.
   end if
 
@@ -369,7 +365,7 @@ subroutine ch_cap ( c )
 
 !*****************************************************************************80
 !
-!! CH_CAP capitalizes a single character.
+!! ch_cap() capitalizes a single character.
 !
 !  Licensing:
 !
@@ -383,9 +379,13 @@ subroutine ch_cap ( c )
 !
 !    John Burkardt
 !
-!  Parameters:
+!  Input:
 !
-!    Input/output, character C, the character to capitalize.
+!    character C, the character to capitalize.
+!
+!  Output:
+!
+!    character C, the capitalized character.
 !
   implicit none
 
@@ -404,7 +404,7 @@ subroutine ch_low ( ch )
 
 !*****************************************************************************80
 !
-!! CH_LOW lowercases a single character.
+!! ch_low() lowercases a single character.
 !
 !  Discussion:
 !
@@ -423,9 +423,13 @@ subroutine ch_low ( ch )
 !
 !    John Burkardt
 !
-!  Parameters:
+!  Input:
 !
-!    Input/output, character CH, the character to be lowercased.
+!    character CH, the character to be lowercased.
+!
+!  Output:
+!
+!    character CH, the lowercased character.
 !
   implicit none
 
@@ -444,7 +448,7 @@ subroutine digit_to_ch ( digit, c )
 
 !*****************************************************************************80
 !
-!! DIGIT_TO_CH returns the character representation of a decimal digit.
+!! digit_to_ch() returns the character representation of a decimal digit.
 !
 !  Example:
 !
@@ -468,11 +472,13 @@ subroutine digit_to_ch ( digit, c )
 !
 !    John Burkardt
 !
-!  Parameters:
+!  Input:
 !
-!    Input, integer ( kind = 4 ) DIGIT, the digit value between 0 and 9.
+!    integer ( kind = 4 ) DIGIT, the digit value between 0 and 9.
 !
-!    Output, character C, the corresponding character, or '*' if DIGIT
+!  Output:
+!
+!    character C, the corresponding character, or '*' if DIGIT
 !    was illegal.
 !
   implicit none
@@ -496,7 +502,7 @@ subroutine f90_line_is_begin ( line, name )
 
 !*****************************************************************************80
 !
-!! F90_LINE_IS_BEGIN determines if a line begins a FORTRAN90 routine.
+!! f90_line_is_begin() determines if a line begins a FORTRAN90 routine.
 !
 !  Discussion:
 !
@@ -538,19 +544,21 @@ subroutine f90_line_is_begin ( line, name )
 !
 !    John Burkardt
 !
-!  Parameters:
+!  Input:
 !
-!    Input, character ( len = * ) LINE, a line of text.
+!    character ( len = * ) LINE, a line of text.
 !
-!    Output, character ( len = * ) NAME, the name of the module, if this
+!  Output:
+!
+!    character ( len = * ) NAME, the name of the module, if this
 !    line begins a module, and ' ' otherwise.
 !
   implicit none
 
   integer ( kind = 4 ) i
-  character ( len = * ), intent(in) :: line
+  character ( len = * ) line
   character ( len = 255 ) line2
-  character ( len = * ), intent(out) :: name
+  character ( len = * ) name
   logical s_eqi
 
   name = ' '
@@ -605,103 +613,11 @@ subroutine f90_line_is_begin ( line, name )
 
   return
 end
-function f90_line_is_interface ( line )
-
-!*****************************************************************************80
-!
-!! F90_LINE_IS_INTERFACE determines if a line starts a FORTRAN90 interface.
-!
-!  Licensing:
-!
-!    This code is distributed under the GNU LGPL license.
-!
-!  Modified:
-!
-!    13 April 2021
-!
-!  Author:
-!
-!    Daniele Tomatis
-!
-!  Parameters:
-!
-!    Input, character ( len = * ) LINE, a line of text.
-!
-!    Output, logical F90_LINE_IS_INTERFACE, TRUE if the line starts an interface.
-!
-  implicit none
-
-  logical :: f90_line_is_interface
-  character ( len = * ), intent(in) :: line
-  character ( len = 255 ) line2
-
-  f90_line_is_interface = .false.
-
-  line2 = line
-
-  call s_low ( line2 )
-
-  call s_blank_delete ( line2 )
-
-  if ( line2(1:9) == 'interface' ) then
-
-    f90_line_is_interface = .true.
-
-  end if
-
-  return
-end
-function f90_line_ends_interface ( line )
-
-!*****************************************************************************80
-!
-!! F90_LINE_ENDS_INTERFACE determines if a line ends a FORTRAN90 interface.
-!
-!  Licensing:
-!
-!    This code is distributed under the GNU LGPL license.
-!
-!  Modified:
-!
-!    13 April 2021
-!
-!  Author:
-!
-!    Daniele Tomatis
-!
-!  Parameters:
-!
-!    Input, character ( len = * ) LINE, a line of text.
-!
-!    Output, logical F90_LINE_ENDS_INTERFACE, TRUE if the line ends an interface.
-!
-  implicit none
-
-  logical :: f90_line_ends_interface
-  character ( len = * ), intent(in) :: line
-  character ( len = 255 ) line2
-
-  f90_line_ends_interface = .false.
-
-  line2 = line
-
-  call s_low ( line2 )
-
-  call s_blank_delete ( line2 )
-
-  if ( line2(1:12) == 'endinterface' ) then
-
-    f90_line_ends_interface = .true.
-
-  end if
-
-  return
-end
 function f90_line_is_end ( line )
 
 !*****************************************************************************80
 !
-!! F90_LINE_IS_END determines if a line ends a FORTRAN90 module.
+!! f90_line_is_end() determines if a line ends a FORTRAN90 module.
 !
 !  Licensing:
 !
@@ -715,16 +631,18 @@ function f90_line_is_end ( line )
 !
 !    John Burkardt
 !
-!  Parameters:
+!  Input:
 !
-!    Input, character ( len = * ) LINE, a line of text.
+!    character ( len = * ) LINE, a line of text.
 !
-!    Output, logical F90_LINE_IS_END, TRUE if the line ends a module.
+!  Output:
+!
+!    logical F90_LINE_IS_END, TRUE if the line ends a module.
 !
   implicit none
 
-  logical :: f90_line_is_end
-  character ( len = * ), intent(in) :: line
+  logical f90_line_is_end
+  character ( len = * ) line
   character ( len = 255 ) line2
 
   f90_line_is_end = .false.
@@ -750,11 +668,117 @@ function f90_line_is_end ( line )
 
   return
 end
+function f90_line_is_interface ( line )
+
+!*****************************************************************************80
+!
+!! f90_line_is_interface() determines if a line starts a FORTRAN90 interface.
+!
+!  Discussion:
+!
+!    Thanks to Professor Daniele Tomatis for this function, which enables.
+!    the code to correctly process files that use the INTERFACE statement.
+!
+!  Licensing:
+!
+!    This code is distributed under the GNU LGPL license.
+!
+!  Modified:
+!
+!    13 April 2021
+!
+!  Author:
+!
+!    Daniele Tomatis
+!
+!  Input:
+!
+!    character ( len = * ) LINE, a line of text.
+!
+!  Output:
+!
+!    logical F90_LINE_IS_INTERFACE: TRUE if the line starts an interface.
+!
+  implicit none
+
+  logical :: f90_line_is_interface
+  character ( len = * ), intent(in) :: line
+  character ( len = 255 ) line2
+
+  f90_line_is_interface = .false.
+
+  line2 = line
+
+  call s_low ( line2 )
+
+  call s_blank_delete ( line2 )
+
+  if ( line2(1:9) == 'interface' ) then
+
+    f90_line_is_interface = .true.
+
+  end if
+
+  return
+end
+function f90_line_is_interface_end ( line )
+
+!*****************************************************************************80
+!
+!! f90_line_is_interface_end() determines if a line ends a FORTRAN90 interface.
+!
+!  Discussion:
+!
+!    Thanks to Professor Daniele Tomatis for this function, which enables.
+!    the code to correctly process files that use the INTERFACE statement.
+!
+!  Licensing:
+!
+!    This code is distributed under the GNU LGPL license.
+!
+!  Modified:
+!
+!    13 April 2021
+!
+!  Author:
+!
+!    Daniele Tomatis
+!
+!  Input:
+!
+!    character ( len = * ) LINE, a line of text.
+!
+!  Output:
+!
+!    logical f90_line_is_interface_end: TRUE if the line ends an interface.
+!
+  implicit none
+
+  logical :: f90_line_is_interface_end
+  character ( len = * ), intent(in) :: line
+  character ( len = 255 ) line2
+
+  f90_line_is_interface_end = .false.
+
+  line2 = line
+
+  call s_low ( line2 )
+
+  call s_blank_delete ( line2 )
+
+  if ( line2(1:12) == 'endinterface' ) then
+
+    f90_line_is_interface_end = .true.
+
+  end if
+
+  return
+end
 subroutine file_ext ( file_name, i, j )
 
 !*****************************************************************************80
 !
-!! FILE_EXT determines the "extension" of a file name.
+!! file_ext() determines the "extension" of a file name.
 !
 !  Discussion:
 !
@@ -784,19 +808,19 @@ subroutine file_ext ( file_name, i, j )
 !
 !    07 February 2000
 !
-!  Parameters:
+!  Input:
 !
-!    Input, character ( len = * ) FILE_NAME, a file name to be examined.
+!    character ( len = * ) FILE_NAME, a file name to be examined.
 !
-!    Output, integer ( kind = 4 ) I, J, the indices of the first and last 
+!  Output:
+!
+!    integer ( kind = 4 ) I, J, the indices of the first and last 
 !    characters in the file extension.
-!
 !    If at least one period occurs in the filename, and at least one
 !    nonblank character follows that period, then I will be the index
 !    of the first character after the period, and J the index of the
 !    last nonblank character after the period.  The extension is
 !    therefore equal to FILE_NAME(I:J).
-!
 !    Otherwise, I and J will be returned as 0, indicating that the file
 !    has no extension.
 !
@@ -832,7 +856,7 @@ subroutine get_unit ( iunit )
 
 !*****************************************************************************80
 !
-!! GET_UNIT returns a free FORTRAN unit number.
+!! get_unit() returns a free FORTRAN unit number.
 !
 !  Discussion:
 !
@@ -860,9 +884,9 @@ subroutine get_unit ( iunit )
 !
 !    John Burkardt
 !
-!  Parameters:
+!  Output:
 !
-!    Output, integer ( kind = 4 ) IUNIT, the free unit number.
+!    integer ( kind = 4 ) IUNIT, the free unit number.
 !
   implicit none
 
@@ -896,7 +920,7 @@ subroutine s_before_ss_copy ( s, ss, s2 )
 
 !*****************************************************************************80
 !
-!! S_BEFORE_SS_COPY copies a string up to a given substring.
+!! s_before_ss_copy() copies a string up to a given substring.
 !
 !  Discussion:
 !
@@ -927,13 +951,15 @@ subroutine s_before_ss_copy ( s, ss, s2 )
 !
 !    John Burkardt
 !
-!  Parameters:
+!  Input:
 !
-!    Input, character ( len = * ) S, the string to be copied.
+!    character ( len = * ) S, the string to be copied.
 !
-!    Input, character ( len = * ) SS, the substring before which the copy stops.
+!    character ( len = * ) SS, the substring before which the copy stops.
 !
-!    Output, character ( len = * ) S2, the copied portion of S.
+!  Output:
+!
+!    character ( len = * ) S2, the copied portion of S.
 !
   implicit none
 
@@ -979,7 +1005,7 @@ subroutine s_blank_delete ( s )
 
 !*****************************************************************************80
 !
-!! S_BLANK_DELETE removes blanks from a string, left justifying the remainder.
+!! s_blank_delete() removes blanks from a string, left justifying the remainder.
 !
 !  Discussion:
 !
@@ -997,9 +1023,13 @@ subroutine s_blank_delete ( s )
 !
 !    John Burkardt
 !
-!  Parameters:
+!  Input:
 !
-!    Input/output, character ( len = * ) S, the string to be transformed.
+!    character ( len = * ) S, the string to be transformed.
+!
+!  Output:
+!
+!    character ( len = * ) S, the transformed string.
 !
   implicit none
 
@@ -1031,7 +1061,7 @@ subroutine s_blanks_delete ( s )
 
 !*****************************************************************************80
 !
-!! S_BLANKS_DELETE replaces consecutive blanks by one blank.
+!! s_blanks_delete() replaces consecutive blanks by one blank.
 !
 !  Discussion:
 !
@@ -1050,9 +1080,13 @@ subroutine s_blanks_delete ( s )
 !
 !    John Burkardt
 !
-!  Parameters:
+!  Input:
 !
-!    Input/output, character ( len = * ) S, the string to be transformed.
+!    character ( len = * ) S, the string to be transformed.
+!
+!  Output:
+!
+!    character ( len = * ) S, the transformed string.
 !
   implicit none
 
@@ -1093,7 +1127,7 @@ subroutine s_cap ( s )
 
 !*****************************************************************************80
 !
-!! S_CAP replaces any lowercase letters by uppercase ones in a string.
+!! s_cap() replaces any lowercase letters by uppercase ones in a string.
 !
 !  Licensing:
 !
@@ -1107,9 +1141,13 @@ subroutine s_cap ( s )
 !
 !    John Burkardt
 !
-!  Parameters:
+!  Input:
 !
-!    Input/output, character ( len = * ) S, the string to be transformed.
+!    character ( len = * ) S, the string to be transformed.
+!
+!  Output:
+!
+!    character ( len = * ) S, the transformed string.
 !
   implicit none
 
@@ -1131,7 +1169,7 @@ subroutine s_cat ( s1, s2, s3 )
 
 !*****************************************************************************80
 !
-!! S_CAT concatenates two strings to make a third string.
+!! s_cat() concatenates two strings to make a third string.
 !
 !  Licensing:
 !
@@ -1145,13 +1183,15 @@ subroutine s_cat ( s1, s2, s3 )
 !
 !    John Burkardt
 !
-!  Parameters:
+!  Input:
 !
-!    Input, character ( len = * ) S1, the "prefix" string.
+!    character ( len = * ) S1, the "prefix" string.
 !
-!    Input, character ( len = * ) S2, the "postfix" string.
+!    character ( len = * ) S2, the "postfix" string.
 !
-!    Output, character ( len = * ) S3, the string made by
+!  Output:
+!
+!    character ( len = * ) S3, the string made by
 !    concatenating S1 and S2, ignoring any trailing blanks.
 !
   implicit none
@@ -1168,7 +1208,7 @@ function s_eqi ( s1, s2 )
 
 !*****************************************************************************80
 !
-!! S_EQI is a case insensitive comparison of two strings for equality.
+!! s_eqi() is a case insensitive comparison of two strings for equality.
 !
 !  Example:
 !
@@ -1186,11 +1226,13 @@ function s_eqi ( s1, s2 )
 !
 !    John Burkardt
 !
-!  Parameters:
+!  Input:
 !
-!    Input, character ( len = * ) S1, S2, the strings to compare.
+!    character ( len = * ) S1, S2, the strings to compare.
 !
-!    Output, logical S_EQI, the result of the comparison.
+!  Output:
+!
+!    logical S_EQI, the result of the comparison.
 !
   implicit none
 
@@ -1243,7 +1285,7 @@ function s_index_last ( string, sub )
 
 !*****************************************************************************80
 !
-!! S_INDEX_LAST finds the LAST occurrence of a given substring.
+!! s_index_last() finds the LAST occurrence of a given substring.
 !
 !  Discussion:
 !
@@ -1276,13 +1318,15 @@ function s_index_last ( string, sub )
 !
 !    John Burkardt
 !
-!  Parameters:
+!  Input:
 !
-!    Input, character ( len = * ) STRING, the string to be searched.
+!    character ( len = * ) STRING, the string to be searched.
 !
-!    Input, character ( len = * ) SUB, the substring to search for.
+!    character ( len = * ) SUB, the substring to search for.
 !
-!    Output, integer ( kind = 4 ) S_INDEX_LAST.  0 if SUB does not occur in
+!  Output:
+!
+!    integer ( kind = 4 ) S_INDEX_LAST.  0 if SUB does not occur in
 !    STRING.  Otherwise S_INDEX_LAST = I, where STRING(I:I+LENS-1) = SUB,
 !    where LENS is the length of SUB, and is the last place
 !    this happens.
@@ -1333,7 +1377,7 @@ function s_indexi ( s, sub )
 
 !*****************************************************************************80
 !
-!! S_INDEXI is a case-insensitive INDEX function.
+!! s_indexi() is a case-insensitive INDEX function.
 !
 !  Discussion:
 !
@@ -1369,13 +1413,15 @@ function s_indexi ( s, sub )
 !
 !    John Burkardt
 !
-!  Parameters:
+!  Input:
 !
-!    Input, character ( len = * ) S, the string to be searched.
+!    character ( len = * ) S, the string to be searched.
 !
-!    Input, character ( len = * ) SUB, the substring to search for.
+!    character ( len = * ) SUB, the substring to search for.
 !
-!    Output, integer ( kind = 4 ) S_INDEXI.  0 if SUB does not occur in
+!  Output:
+!
+!    integer ( kind = 4 ) S_INDEXI.  0 if SUB does not occur in
 !    the string.  Otherwise S(S_INDEXI:S_INDEXI+LENS-1) = SUB,
 !    where LENS is the length of SUB, and is the first place
 !    this happens.  However, note that this routine ignores case,
@@ -1425,7 +1471,7 @@ subroutine s_low ( s )
 
 !*****************************************************************************80
 !
-!! S_LOW replaces all uppercase letters by lowercase ones.
+!! s_low() replaces all uppercase letters by lowercase ones.
 !
 !  Licensing:
 !
@@ -1439,10 +1485,13 @@ subroutine s_low ( s )
 !
 !    John Burkardt
 !
-!  Parameters:
+!  Input:
 !
-!    Input/output, character ( len = * ) S, the string to be
-!    transformed.  On output, the string is all lowercase.
+!    character ( len = * ) S, the string to be transformed.
+!
+!  Output:
+!
+!    character ( len = * ) S, the transformed string.
 !
   implicit none
 
@@ -1462,7 +1511,7 @@ subroutine s_split ( s, sub, s1, s2, s3 )
 
 !*****************************************************************************80
 !
-!! S_SPLIT divides a string into three parts, given the middle.
+!! s_split() divides a string into three parts, given the middle.
 !
 !  Discussion:
 !
@@ -1492,22 +1541,24 @@ subroutine s_split ( s, sub, s1, s2, s3 )
 !
 !    John Burkardt
 !
-!  Parameters:
+!  Input:
 !
-!    Input, character ( len = * ) S, the string to be analyzed.
+!    character ( len = * ) S, the string to be analyzed.
 !
-!    Input, character ( len = * ) SUB, the substring used to "split" S.
+!    character ( len = * ) SUB, the substring used to "split" S.
 !    Trailing blanks in SUB are ignored.
 !
-!    Output, character ( len = * ) S1, the entries in the string, up
+!  Output:
+!
+!    character ( len = * ) S1, the entries in the string, up
 !    to, but not including, the first occurrence, if any,
 !    of SUB.  If SUB occurs immediately, then S1 = ' '.
 !    If SUB is not long enough, trailing entries will be lost.
 !
-!    Output, character ( len = * ) S2, the part of the string that matched SUB.
+!    character ( len = * ) S2, the part of the string that matched SUB.
 !    If S2 is ' ', then there wasn't a match.
 !
-!    Output, character ( len = * ) S3, the part of the string after the match.
+!    character ( len = * ) S3, the part of the string after the match.
 !    If there was no match, then S3 is blank.
 !
   implicit none
@@ -1572,7 +1623,7 @@ subroutine timestamp ( )
 
 !*****************************************************************************80
 !
-!! TIMESTAMP prints the current YMDHMS date as a time stamp.
+!! timestamp() prints the current YMDHMS date as a time stamp.
 !
 !  Example:
 !
@@ -1589,10 +1640,6 @@ subroutine timestamp ( )
 !  Author:
 !
 !    John Burkardt
-!
-!  Parameters:
-!
-!    None
 !
   implicit none
 
@@ -1650,7 +1697,7 @@ subroutine word_next_read ( line, word, done )
 
 !*****************************************************************************80
 !
-!! WORD_NEXT_READ "reads" words from a string, one at a time.
+!! word_next_read() "reads" words from a string, one at a time.
 !
 !  Discussion:
 !
@@ -1671,20 +1718,22 @@ subroutine word_next_read ( line, word, done )
 !
 !    John Burkardt
 !
-!  Parameters:
+!  Input:
 !
-!    Input, character ( len = * ) LINE, a string, presumably containing words
+!    character ( len = * ) LINE, a string, presumably containing words
 !    separated by spaces.
 !
-!    Output, character ( len = * ) WORD.
+!    logical DONE: On input with a fresh value of LINE, set DONE to TRUE.
+!
+!  Output:
+!
+!    character ( len = * ) WORD.
 !    If DONE is FALSE, then WORD contains the "next" word read from LINE.
 !    If DONE is TRUE, then WORD is blank, because there was no more to read.
 !
-!    Input/output, logical DONE.
-!    On input with a fresh value of LINE, set DONE to TRUE.
-!    On output, the routine sets DONE:
-!      FALSE if another word was read from LINE,
-!      TRUE if no more words could be read (LINE is exhausted).
+!    logical DONE: the routine resets DONE:
+!    * FALSE if another word was read from LINE,
+!    * TRUE if no more words could be read (LINE is exhausted).
 !
   implicit none
 
@@ -1789,3 +1838,4 @@ subroutine word_next_read ( line, word, done )
 
   return
 end
+ 

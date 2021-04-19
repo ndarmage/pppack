@@ -2964,7 +2964,8 @@ subroutine r8vec_even ( n, alo, ahi, a )
   integer ( kind = 4 ), intent(in) :: n
 
   real ( kind = 8 ), intent(out) :: a(n)
-  real ( kind = 8 ), intent(in) :: ahi, alo
+  real ( kind = 8 ), intent(in) :: ahi
+  real ( kind = 8 ), intent(in) :: alo
   integer ( kind = 4 ) i
 
   if ( n == 1 ) then
