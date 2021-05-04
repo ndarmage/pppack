@@ -10,13 +10,13 @@ as equivalent one-dimensional arrays are also included.
           not supported yet.
 
 .. todo::
-   Chebyshev multi-dimensional representations are not 
+   Chebyshev multi-dimensional representations are not
    provided and should be implemented in the FORTRAN library.
    This development is postponed, as it hasn't been needed
    so far.
 
 .. todo::
-   Conversion from B-spline form to PP form in case of 
+   Conversion from B-spline form to PP form in case of
    multi-dimensional representation is currently not
    supported.
 """
@@ -41,16 +41,16 @@ class Fd(list):
     obtained by Cartisian products as
     :math:`V^{(d)} = V_{1}\times \ldots \times V_{d}`, with
     :math:`V_i \in \mathbb{R}\, \forall i`.
-    
-    *Fd* is also defined by the tensor product of 
+
+    *Fd* is also defined by the tensor product of
     one-dimensional function space :math:`F_i(V_i)`.
     """
     _els = 0  # nb of elements in V_i used to generate Fd spaces
 
     def __init__(self, *args, **kwargs):
         """
-        Init a multivariate function space as a list of 
-        univariate function spaces. Uniqueness of the 
+        Init a multivariate function space as a list of
+        univariate function spaces. Uniqueness of the
         components of a Fd instance is ensured.
         """
         if "name" in kwargs:
@@ -88,26 +88,26 @@ class Fd(list):
         return [(F.name, F.b) for F in self]
 
     def __str__(self):
-        l = "F^(%d) = "%self.dims
+        l = "F^(%d) = " % self.dims
         l += " x ".join([V.name for V in self])
         l += "\n with,\n"
         l += '\n'.join([("%s = " % V.name + str(V)) for V in self])
         return l
 
     def __repr__(self):
-        return "Fd(" + ", ".join([ repr(F) for F in self ]) + ')'
+        return "Fd(" + ", ".join([repr(F) for F in self]) + ')'
 
-    def __mul__(self,Q):
+    def __mul__(self, Q):
         return Fd(self, Q)
 
 
 class PP(Fd):
     r"""
-    Class representing a Piecewise Polynomial function space of 
-    polynomial order :math:`k`, breakpoints :math:`\vec{\xi}` and 
-    continuities of derivativies :math:`\vec{\nu}`, 
+    Class representing a Piecewise Polynomial function space of
+    polynomial order :math:`k`, breakpoints :math:`\vec{\xi}` and
+    continuities of derivativies :math:`\vec{\nu}`,
     :math:`PP_{k,\vec{\xi}(,\vec{\nu})}`. Simple polynomial space
-    :math:`P_k \subseteq PP_{k,\xi}`, with equality in case of 
+    :math:`P_k \subseteq PP_{k,\xi}`, with equality in case of
     :math:`\xi = [a,b]`. In this case, the data points :math:`\tau`
     are expected in :math:`[a,b]`.
 
@@ -130,15 +130,15 @@ class PP(Fd):
         self.xi = sorted(xi, key=float)
         # check for unique breakpoints in xi
         for x in xi:
-            if sum([c==x for c in xi]) > 1:
+            if sum([c == x for c in xi]) > 1:
                 raise ValueError("multiple breakpoint %e detected" % x)
         if nu is not None:
             if len(nu) != self.l - 1:
-                 raise ValueError("invalid size of nu/xi")
+                raise ValueError("invalid size of nu/xi")
             if any(vi < 0 for vi in nu):
-                 raise ValueError("invalid negative element in nu")
+                raise ValueError("invalid negative element in nu")
             if any(vi > k for vi in nu):
-                 raise ValueError("invalid element > k in nu")
+                raise ValueError("invalid element > k in nu")
             self.nu = nu
         else:
             # k-1 null jumps of derivatives up to the (k-1)-th order
@@ -147,7 +147,7 @@ class PP(Fd):
 
     @property
     def l(self):
-        return (len(self.xi)-1)
+        return len(self.xi) - 1
 
     @property
     def a(self):
@@ -160,13 +160,13 @@ class PP(Fd):
     def PP2S(self):
         r"""
         Get :math:`S_{k,t}` by the theorem of Curry and Schoenberg (1966)
-         :math:`S_{k,t} = PP_{k,\vec{\xi},\vec{\nu}} \mbox{ on } 
+         :math:`S_{k,t} = PP_{k,\vec{\xi},\vec{\nu}} \mbox{ on }
          [t_k, t_{n+1}]`.
         """
         n = self.k * self.l - sum(self.nu)
         t = [self.xi[0] for i in range(k)]
         if len(self.nu) > 0:
-            for i in range(1,self.l):
+            for i in range(1, self.l):
                 t.extend([self.xi[i] for j in range(k - self.nu[i-1])])
         t.extend([self.xi[-1] for i in range(k)])
         if n + k != len(t):
@@ -202,7 +202,7 @@ class S(Fd):
     r"""
     Class representing the function space populated by Bsplines
     of polynomial order *k* and knot sequence :math:`\vec{t}`.
-    
+
     :Example:
 
     >>> S0 = S(4,[1., 1., 2., 3., 4., 4.])
@@ -242,7 +242,7 @@ class S(Fd):
 
     def tau4Ik(self, k_is_even=True):
         r"""
-        Even order interpolation at knots, say :math:`k=2m`, reproducing 
+        Even order interpolation at knots, say :math:`k=2m`, reproducing
         :math:`I_k`, that is spline interpolation of order *k* with the
         **not-a-knot** end condition.
         """
@@ -281,10 +281,10 @@ class fd(Fd):
     r"""
     Class representing a multivariate function *f* in *Fd* as
     :math:`f: V^{(d)} \rightarrow F^{(d)} \ in \mathbb{R}`,
-    with :math:`V^{(d)} = V_1 \times \ldots \times V_d`, 
+    with :math:`V^{(d)} = V_1 \times \ldots \times V_d`,
     :math:`V_i \in \mathbb{R},\, \forall i` and
     :math:`F^{(d)} = F_1(V_1) \times \ldots \times F_d(V_d)`.
-    In virtue of the Cartesian compositions and provided 
+    In virtue of the Cartesian compositions and provided
     that one-dimensional basis functions :math:`
     \mathcal{B}(F_i)={\psi_i,\, i=1,\ldots}` are available,
     it is:
@@ -305,7 +305,7 @@ class fd(Fd):
 
     The C version with zero-based numbering is:
 
-    .. math:: C_{\vec{i}} = C(i_1 + n_1(i_2 + n_2(i_3 
+    .. math:: C_{\vec{i}} = C(i_1 + n_1(i_2 + n_2(i_3
                           + \ldots + n_{d-1}(i_d) \ldots ))).
 
     The approximant function *f* to *g* is determined by applying
@@ -316,9 +316,9 @@ class fd(Fd):
     Currently, only :math:`\lambda_{j}g_j = [\tau_j]g(x_j,\dot)`
     is available in the module.
 
-    :math:`C_{\vec{i}}` and :math:`g_{\vec{i}}` (gtau in the 
-    following) are equivalent one-dimensional FORTRAN arrays, 
-    whereas data points follow as lists :math:`(\tau_{i_j}, 
+    :math:`C_{\vec{i}}` and :math:`g_{\vec{i}}` (gtau in the
+    following) are equivalent one-dimensional FORTRAN arrays,
+    whereas data points follow as lists :math:`(\tau_{i_j},
     i_j=1,I_j,\; \forall j)`.
 
     .. note:: (*tau*, *gtau*) is to be considered as private to
@@ -349,16 +349,16 @@ class fd(Fd):
         self._gtau = g
 
     @classmethod
-    def inFd(cls,Fdin):
+    def inFd(cls, Fdin):
         """Init from the space *Fd* to which the function belongs."""
         if not isinstance(Fdin, Fd):
             raise TypeError("non-Fd obj in input")
         return fd(Fdin)
 
     def __str__(self):
-        l = self.__class__.__name__ + " \in " + super(Fd, self).__str__()
+        l = self.__class__.__name__ + r" \in " + super(Fd, self).__str__()
         l += '\n'
-        if not self.coef is None:
+        if self.coef is not None:
             l += "coef = \n" + str(self.coef)
             l += "\n tau = " + str(self._tau)
             l += "\ngtau = " + str(self._gtau)
@@ -368,10 +368,10 @@ class fd(Fd):
 
     def cmpcoef(self, tau, gtau):
         r"""
-        Compute the tensor coefficients of the *d*-dimensional 
+        Compute the tensor coefficients of the *d*-dimensional
         function fd, with input values :math:`gtau=fd(x_\vec{j})`
         as one-dimensional FORTRAN array and data points tau in a
-        list as :math:`[ [x_{j_i=1}^{J_i}], \forall j_i ]`. The 
+        list as :math:`[ [x_{j_i=1}^{J_i}], \forall j_i ]`. The
         caller must ensure the correspondence between the *d*-tuples
         *x* with the gtau values according to the definition
         of the equivalent one-dimensional array.
@@ -390,7 +390,7 @@ class fd(Fd):
         # interpolation requires as many data points as function values
         if N != len(gtau):
             raise ValueError("tau/gtau data mismatch")
-        
+
         coef = np.float64(gtau)
         for i in range(self.dims):
             F = self[i]
@@ -400,28 +400,27 @@ class fd(Fd):
                 elif isinstance(F, PP):
                     f = pp.inPP(F)
                 # other types are already prevented by Fd init
-            
+
             # compute the coefficient along index i
             f.cmpcoef(tau=tau[i], gtau=coef)
-            ### comment old part not using FORTRAN ndarray referencing
-            ###f.cmpcoef(tau=tau[i],gtau= _matricize(coef,Ni) )
-            
+            # ## comment old part not using FORTRAN ndarray referencing
+            # # f.cmpcoef(tau=tau[i], gtau=_matricize(coef,Ni) )
+
             # override the list object with the one-dimensional
             # function type f in F (inheriting F methods) to access
             # the methods of f later on at fd evaluation
             if not isinstance(F, fd):
                 self[i] = f
             coef = np.float64(f.coef)
-            ###coef=_vectorize(f.coef)
-            ###Ni=Ni[1:]+Ni[:1] # shift periodically of one position
-        
+            # # coef = _vectorize(f.coef)
+            # # Ni = Ni[1:] + Ni[:1]  # shift periodically of one position
+
         # tau, gtau and coef must change at the same time
         self._tau, self._gtau, self.coef = tau, gtau, coef
 
     def __call__(self, x, j=0):
         r"""
-        Evaluate :math:`D^j f^{(d)}` at
-        :math:`\vec{x}=[x_1, \ldots, x_d]`.
+        Evaluate :math:`D^j f^{(d)}` at :math:`\vec{x}=[x_1, \ldots, x_d]`.
         """
         if hasattr(x, '__len__'):
             lx = len(x)
@@ -431,17 +430,17 @@ class fd(Fd):
             raise ValueError("input x is not a %d-tuple." % self.dims)
         if self.coef is None:
             raise AttributeError("missing coef.")
-        ### comment to enable FORTRAN ndarray spacial treatment
-        ###Ni=[len(t) for t in self._tau]
-        ###N=np.prod(Ni)
+        # # comment to enable FORTRAN ndarray spacial treatment
+        # Ni=[len(t) for t in self._tau]
+        # N=np.prod(Ni)
 
         val = np.float64(self.coef)
         for i in range(self.dims):
             f = self[i]
-            ###f.coef = _matricize(val,Ni)
+            # f.coef = _matricize(val,Ni)
             f.coef = np.float64(val)
-            val = f(x[i],j)
-            ###del Ni[0] # crop dimension in the val tensor
+            val = f(x[i], j)
+            # del Ni[0]  # crop dimension in the val tensor
 
         return val[0]
 
@@ -456,8 +455,7 @@ class pp(fd, PP):
     The function and its derivatives are represented (and evaluated)
     as (de Boor 1987, ch. 7 pp. 89):
 
-    .. math:: D^j f(x) = \sum_{m=j}^{k-1} C_{m+1,i}(x-\xi_i)^{m-j} 
-                       / (m-j)!
+    .. math:: D^j f(x) = \sum_{m=j}^{k-1} C_{m+1,i}(x-\xi_i)^{m-j} / (m-j)!
 
     where either
 
@@ -472,7 +470,7 @@ class pp(fd, PP):
               the correspondence with the fitting coefficients.
     """
     # f.coef becomes here COEF(K,L) as C_{i,j} above
-    basefncs = None  # type of base used in the P_k(,xi,nu) representation 
+    basefncs = None  # type of base used in the P_k(,xi,nu) representation
     # inherit the init from PP
 
     @classmethod
@@ -490,7 +488,7 @@ class pp(fd, PP):
 
          * CUBSPL for cubic splines + b.c. (see below),
          * NEWTON for simple polynomials in Newton form by divided
-           differences (default by method input arg in case of 
+           differences (default by method input arg in case of
            :math:`P_k`) or CHEBYSHEV polynomial interpolation.
 
         Output are the fitting coefficients, -> coef(k,L=N-1).
@@ -520,19 +518,19 @@ class pp(fd, PP):
             coef = np.zeros((k, n), order='F')
             if n != lgtau:
                 raise ValueError("gtau values mismatch")
-            coef[0,:]=gtau # remind output coef[0,:]=gtau!
+            coef[0, :] = gtau  # remind output coef[0,:]=gtau!
             if ibcbeg > 0:
                 coef[1, 0] = dgtau1
             if ibcend > 0:
                 coef[1, -1] = dgtauN
-            ppk.cubspl(tau=np.float64(self.xi), c=np.float64(coef), \
+            ppk.cubspl(tau=np.float64(self.xi), c=np.float64(coef),
                        ibcbeg=np.int32(ibcbeg), ibcend=np.int32(ibcend), n=n)
             self._tau = self.cmpPPtau()
             self._gtau = gtau
         else:
             if ltau != k:
                 raise ValueError("k data points are needed")
-            if lgtau%ltau != 0:
+            if lgtau % ltau != 0:
                 raise ValueError("tau/gtau mismatch")
             # check sorting order of tau
             if not all(tau[i] <= tau[i+1] for i in range(k-1)):
@@ -569,8 +567,8 @@ class pp(fd, PP):
         """
         s_from_pp = s.inS(self.PP2S())
         if tau is None:
-          s_from_pp._tau = self.tau4Ik()
-          s_from_pp._gtau = self._gtau
+            s_from_pp._tau = self.tau4Ik()
+            s_from_pp._gtau = self._gtau
         elif gtau is None:
             raise ValueError("missing input gtau")
         return s_from_pp
@@ -585,7 +583,7 @@ class pp(fd, PP):
         k, l, j4 = np.int32(self.k), np.int32(self.l), np.int32(j)
         if self.l > 1:
             f = ppk.ppvalu(breaks=np.float64(self.xi), l=l, k=k,
-                           coef=np.float64(self.coef[:,:-1]),
+                           coef=np.float64(self.coef[:, :-1]),
                            x=np.float64(x), jderiv=j4)
         else:
             m = np.int32(lcoef / ltau)
@@ -597,7 +595,7 @@ class pp(fd, PP):
                         if not x.flags['F_CONTIGUOUS']:
                             x = np.asfortranarray(x, dtype=np.float64)
                     elif ni == 1:
-                        x=[x]
+                        x = [x]
                     else:
                         raise ValueError("Invalid input x=" + str(x))
                     f = ppk.newton_value_1d(n=k, ni=ni,
@@ -612,21 +610,21 @@ class pp(fd, PP):
                                                c=np.float64(self.coef),
                                                xmin=xmin, xmax=xmax,
                                                xi=np.float64(x))
-                else: 
+                else:
                     raise ValueError("ND chebyshev not available yet")
             else:
                 raise RuntimeError("missing call method for this P_k")
         return f
 
 
-class s(fd,S):
+class s(fd, S):
     r"""
     Class representing a functional element *s* in *S* as:
 
     .. math:: f(x) = \sum_{i=1}^n \alpha_i B_{i,k,t}(x)
 
-    if :math:`t_j \leq x \leq t_{j+1}` for some 
-    :math:`j \in [k,n]`, then by the compact support of B-splines it is 
+    if :math:`t_j \leq x \leq t_{j+1}` for some
+    :math:`j \in [k,n]`, then by the compact support of B-splines it is
 
     .. math:: f(x) = \sum_{i=j-k+1}^j \alpha_i B_{i,k,t}(x).
 
@@ -649,7 +647,7 @@ class s(fd,S):
         t(1:n+k), which takes on the value gtau(i) at tau(i), for
         i = 1 to n. The i-th equation of the linear system
         A * BCOEF = B
-        for the B-spline coefficients of the interpolant enforces 
+        for the B-spline coefficients of the interpolant enforces
         interpolation at tau(1:n). Hence, B(i) = gtau(i), for all i,
         and A is a band matrix with 2*k-1 bands, if it is invertible.
 
@@ -703,17 +701,17 @@ class s(fd,S):
                     print("%d internal knots (>k-1) = tau[%d] = %e" %
                           (tm, i, tau[i]))
                     singularBij = True
-                    break         
+                    break
             # verify t_i < tau_i < tau_{i+k}, for all i
             if not(self.t[i] < tau[i] < self.t[i+k]):
-                if i == 0 and (self.t[i] <= tau[i] < self.t[i+k]):
+                if (i == 0) and (self.t[i] <= tau[i] < self.t[i+k]):
                     continue
-                if i == n - 1 and (self.t[i] < tau[i] <= self.t[i+k]):
+                if (i == n - 1) and (self.t[i] < tau[i] <= self.t[i+k]):
                     continue
                 print("?!? i=%d, t[i]=%e < tau[i]=%e < t[i+%d]=%e ?!?" %
                       (i, self.t[i], tau[i], k, self.t[i + self.k]))
                 singularBij = True
-                break 
+                break
         return singularBij
 
     def s2pp(self):
@@ -726,10 +724,10 @@ class s(fd,S):
         if sum(breaks[l+1:]) > 0:
             raise RuntimeError("BSPLPP failed.")
         pp_from_s = pp(self.k, breaks[:l+1])
-        pp_from_s.coef = coef[:,:l]
+        pp_from_s.coef = coef[:, :l]
         # set tau/gtau
         pp_from_s.tau = pp_from_s.cmpPPtau()
-        pp_from_s.gtau = coef[0,:l]
+        pp_from_s.gtau = coef[0, :l]
         return pp_from_s
 
     def __call__(self, x, j=0):
@@ -745,39 +743,40 @@ class s(fd,S):
             f = ppk.bvalue(n=n, k=k, x=x, jderiv=j4,
                            t=np.float64(self.t), bcoef=np.float64(self.coef))
             # put value in numpy.ndarray to agree with fd.__call__
-            f = np.array([f,], order='F')
+            # f = np.array([f,], order='F')
+            f = np.asfortranarray(f, dtype=np.float64)
         else:
             f = ppk.bvalnd(n=n, m=m, k=k, x=x, jderiv=j4,
                            t=np.float64(self.t), bcoef=np.float64(self.coef))
         return f
 
 
-#--------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # functions to handle the equivalent one-dimensional array chosen to represent
 # multi-dimensional arrays (a.k.a. tensor in this module, regardless of other
 # definitions from Maths and Physics)
-#-------------------------------------------------------------------------------- 
-def getidx(i,Ni):
+# -----------------------------------------------------------------------------
+def getidx(i, Ni):
     """
     Get the position of the tuple *i* in the equivalent one-dimensional
     vector. The list *Ni* contains the maximum values of the indices,
-    which start all from 0. 
+    which start all from 0.
     """
-    k,pos = len(Ni), 0
-    for j in range(k-1,0,-1):
+    k, pos = len(Ni), 0
+    for j in range(k-1, 0, -1):
         pos = Ni[j-1] * (i[j] + pos)
     return pos + i[0]
 
 
 def _matricize(ts, Ni, j=0):
-    """
+    r"""
     Matricize the tensor *ts* intended as multi-dimensional array and
     provided in input as a one-dimensional equivalent array. The
     indices in :math:`i_1^k` building the array have maximum dimensions
     respectively :math:`Ni_1^k`. The function returns (C zero-based
     numbering):
 
-    .. math:: ts(i_j, i_1+n_2(i_2+\ldots+n_{j-1}(i_{j+1}+n_{j+1}( 
+    .. math:: ts(i_j, i_1+n_2(i_2+\ldots+n_{j-1}(i_{j+1}+n_{j+1}(
                                  +\ldots+n_{k-1}(i_k)\ldots)))).
     """
     Nimj, N = [i for i in Ni], np.prod(Ni)
