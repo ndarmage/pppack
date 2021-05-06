@@ -270,13 +270,14 @@ class S(Fd):
         return self.tau4Ik()
 
     def cmpknots(self, tau):
-        r""" Knot optimal placement based on SPLOPT (see chapter XIII Carl de Boor's book) """
+        r""" Knot optimal placement based on SPLOPT 
+        (see chapter XIII Carl de Boor's book) """
         k, n = self.k, self.n
         if n != len(tau):
             raise ValueError("tau length is not equal to n")
         scrtch,t,iflag =  ppk.splopt(tau = tau, n = n, k = k)
         if iflag == 2:
-            print("WARNING: Knot optimization failure : K<3 or N<K or the linear system was singular. Knot sequence of S was not modified.")
+            raise RuntimeError("WARNING: Knot optimization failure : K<3 or N<K or the linear system was singular. Knot sequence of S was not modified.")
         else:
             self.t = t
         return t
