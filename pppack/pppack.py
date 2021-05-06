@@ -274,7 +274,7 @@ class S(Fd):
         k, n = self.k, self.n
         if n != len(tau):
             raise ValueError("tau length is not equal to n")
-        scrtch,t,iflag =  pppack.splopt(tau = tau, n = n, k = k)
+        scrtch,t,iflag =  ppk.splopt(tau = tau, n = n, k = k)
         if iflag == 2:
             print("WARNING: Knot optimization failure : K<3 or N<K or the linear system was singular. Knot sequence of S was not modified.")
         else:
