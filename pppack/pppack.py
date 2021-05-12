@@ -275,11 +275,11 @@ class S(Fd):
         k, n = self.k, self.n
         if n != len(tau):
             raise ValueError("tau length is not equal to n")
-        scrtch,t,iflag =  ppk.splopt(tau = tau, n = n, k = k)
+        scrtch,t,iflag =  ppk.splopt(tau = np.float64(tau), n = n, k = k)
         if iflag == 2:
             raise RuntimeError("WARNING: Knot optimization failure : K<3 or N<K or the linear system was singular. Knot sequence of S was not modified.")
         else:
-            self.t = t
+            self.t = np.float64(t)
         return t
 
     def __repr__(self):
