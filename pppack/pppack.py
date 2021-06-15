@@ -425,9 +425,9 @@ class fd(Fd):
         if hasattr(x, '__len__'):
             lx = len(x)
         else:
-            raise TypeError("input does not have len, x=\n" + str(x))
+            raise AttributeError("input does not have len, x=\n" + str(x))
         if lx != self.dims:
-            raise ValueError("input x is not a %d-tuple." % self.dims)
+            raise ValueError("input x is not a %d-uple." % self.dims)
         if self.coef is None:
             raise AttributeError("missing coef.")
         # # comment to enable FORTRAN ndarray spacial treatment
