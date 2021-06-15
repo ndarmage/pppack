@@ -13,7 +13,6 @@ except ImportError:
 def cmpgtau(tau, g):
     "Compute g values at all points in tau in the associated dimension."
     # compute length of each row of tau
-    print(tau)
     if isinstance(tau[0], (list, tuple, np.ndarray)):
         Ni = [len(t) for t in tau]
     else:
@@ -34,6 +33,8 @@ def cmpgtau(tau, g):
 
 def chkapprx(tau, f, g):
     "Check interpolation by computing the interpolated values at data points."
+    print("{:^13s} {:^13s} {:<13s}".format("Interpolation", "g values",
+                                           "Rel. error (%)"))
     for x in itt.product(*tau):
         fx, gx = f(x), g(*x)
         print("%+13.6e %+13.6e %+7.2f" % (fx, gx, (1. - fx / gx) * 100))
@@ -49,6 +50,27 @@ def g2(x, y):
 
 def g1(x):
     return g2(x, 0)
+
+
+def make_plot(x_values, f, g, xlabel='x', ylabel='(a.u.)'):
+    "Plot the interpolation error"
+    import matplotlib.pyplot as plt
+    interp_values = [f(x) for x in x_values]
+    g_values = [g(x) for x in x_values]
+    fig, ax = plt.subplots(1, 1)
+    ax.plot(x_values, interp_values,'+', color='red', markersize=10,
+            label='Interp. function')
+    ax.plot(x_values, g_values, '--', label='Exact function')
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ae = ax.twinx()
+    rerr = (1 - np.array(interp_values) / np.array(g_values)) * 100
+    ae.plot(x_values, rerr, 'k', lw=1)
+    ae.set_ylabel('Rel. Error (%)')
+    ax.legend()
+    plt.tight_layout()
+    plt.show()
+    plt.close(fig)
 
 
 def run_test():
@@ -74,25 +96,26 @@ def run_test():
     V3 = ppk.Fd(P1, P2, ppk.PP(2, xi, name="linear2"), name="3D-poly")
     V4 = ppk.Fd(P1, S2, P2, name="3D-mix")
 
-    print(" --- Interpolation tests ---"
-          "*** check whether interpolation error is "
-          "small at given data points in common use cases ***")
+    print(" --- Interpolation tests ---\n"
+          "*** check whether interpolation error is small ***\n"
+          "*** at given data points in common use cases   ***")
 
-    print(" --- test 1D poly ---")
+    print("\n --- test 1D poly ---")
     f1 = ppk.fd.inFd(P1)
     tau = [[0., .5, 1.]]  # quadratic
     gtau = cmpgtau(tau, g1)
     f1.cmpcoef(tau, gtau)
     chkapprx(tau, f1, g1)
+    # make_plot(np.linspace(0, 1, 20), f1, g1)
 
-    print(" --- test 2D poly ---")
+    print("\n --- test 2D poly ---")
     f2 = ppk.fd.inFd(V1)
     tau.append([0., 1.])  # linear
     gtau = cmpgtau(tau, g2)
     f2.cmpcoef(tau, gtau)
     chkapprx(tau, f2, g2)
 
-    print(" --- test 2D Bspline ---")
+    print("\n --- test 2D Bspline ---")
     h2 = ppk.fd.inFd(V2)
     tau = []
     for V in V2:
@@ -101,7 +124,7 @@ def run_test():
     h2.cmpcoef(tau, gtau)
     chkapprx(tau, h2, g2)
 
-    print(" --- test 3D poly ---")
+    print("\n --- test 3D poly ---")
     f3 = ppk.fd.inFd(V3)
     tau = [[0., .5, 1.]]  # quadratic
     tau.append([0., 1.])  # linear
@@ -110,7 +133,7 @@ def run_test():
     f3.cmpcoef(tau, gtau)
     chkapprx(tau, f3, g3)
 
-    print(" --- test 3D mix ---")
+    print("\n --- test 3D mix ---")
     f4 = ppk.fd.inFd(V4)
     tau = [[0., .5, 1.]]  # quadratic
     tau.append(S2.cmptau())

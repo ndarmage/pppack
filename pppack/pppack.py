@@ -424,8 +424,10 @@ class fd(Fd):
         """
         if hasattr(x, '__len__'):
             lx = len(x)
-        else:
+        elif self.dims > 1:
             raise AttributeError("input does not have len, x=\n" + str(x))
+        else:
+            x, lx = [x], 1
         if lx != self.dims:
             raise ValueError("input x is not a %d-uple." % self.dims)
         if self.coef is None:
