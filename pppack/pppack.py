@@ -61,7 +61,7 @@ class Fd(list):
                 if F.name != '':
                     nm = F.name
                 else:  # use a standard name
-                    nm = "F%d" % (self._els)
+                    nm = "F%d" % self._els
                     Fd._els += 1
                     F.name = nm
                 self.append(F)
@@ -588,6 +588,10 @@ class pp(fd, PP):
                            coef=np.float64(self.coef[:, :-1]),
                            x=np.float64(x), jderiv=j4)
         else:
+            if j4 > 0:
+                raise NotImplementedError('Evaluation of derivatives by simple'
+                                          ' polynomial interpolation not'
+                                          ' available yet.')
             m = np.int32(lcoef / ltau)
             if self.basefncs == "newton":
                 tau, coef = np.float64(self._tau), np.float64(self.coef)
