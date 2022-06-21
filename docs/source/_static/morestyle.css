@@ -1,0 +1,179 @@
+/* ============================================================================
+ USER SETTINGS
+============================================================================ */
+
+/* import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap');
+
+/* custom colors */
+:root {
+    --main:                       #32b28e; /* main color */
+    --link:                       #02b582; /* link color */
+    --visitedlink:                #0c7054; /* visited link color */
+    --navbackground:              #2d4a42; /* navigation bar color */
+    --navlinkl1:                  #e6fcf6; /* navigation link color */
+    --navhoverlinkl1background:   #3e665b; /* navigation link hovered color */
+    --navonlinkl1background:      #bdf0e1; /* navigation current link color */
+    --navonhoverlinkl1background: #90f0d5; /* navigation current link hovered color */
+    --navonlinkl23background:     #deffe6; /* sublink bakcground */
+    --autosumlink:                #23ad97; /* link in autosummary */
+    --descripboxbackground:       #e6fcf6; /* description box background */
+    --descripboxtopborder:        #00d498; /* description box top border */
+    --descripboxproperty:         #008046; /* description box property color */
+    --backgroundcolor1:           #f5fffd; /* background color 1 */
+    --backgroundcolor2:           #f2fffc; /* background color 2 */
+}
+
+/* ============================================================================
+ WHOLE DOCUMENT
+============================================================================ */
+
+/* default font */
+body {
+    margin:0;
+    font-family: 'Nunito', sans-serif;
+}
+
+/* content body width */
+.wy-nav-content {
+    max-width: 800px !important;
+    min-height: 100vh;
+}
+
+/* change link color */
+.wy-breadcrumbs a, .rst-content a, footer > a, a.headerlink {
+    color: var(--link);
+}
+.wy-breadcrumbs a, #currentpage-breadcrumbs, footer > a, a.headerlink {
+    font-weight: 700;
+} 
+.wy-breadcrumbs a:visited, .rst-content a:visited, footer > a:visited, a.headerlink:visited {
+    color: var(--visitedlink);
+}
+
+/* ============================================================================
+ NAVIGATION BAR + SEARCH RESULTS
+============================================================================ */
+
+/* navigation search background */
+.wy-side-nav-search {
+    background-color: var(--main);
+}
+
+/* toctree */
+.wy-nav-side{
+    background: var(--navbackground);
+}
+.wy-menu.wy-menu-vertical .caption-text {
+    color: var(--main);
+}
+.wy-menu-vertical a {
+    color: var(--navlinkl1);
+}
+.wy-menu-vertical a:hover {
+    font-weight: 700;
+    background-color: var(--navhoveredlink);
+}
+.wy-menu-vertical li.current > a, .wy-menu-vertical li.on a {
+    font-weight: 700;
+    background: var(--navonlinkl1background);
+}
+.wy-menu-vertical li.current > a:hover, .wy-menu-vertical li.on a:hover{
+    background: var(--navonhoverlinkl1background);
+}
+
+.wy-menu-vertical li.toctree-l2.current > a, .wy-menu-vertical li.toctree-l2.current li.toctree-l3 > a{
+    background: var(--navonlinkl23background);
+}
+
+/* search link */
+#search-results .search li a {
+    font-size: 100%;
+    color: var(--link);
+    font-weight: 700;
+}
+#search-results .search li a:visited {
+    color: var(--visitedlink);
+}
+
+/* mobile nav top */
+.wy-nav-top {
+    background: var(--main);
+}
+
+/* ============================================================================
+ AUTO-SUMMARY
+============================================================================ */
+
+/* class/function name in autosummary */
+.rst-content code.literal,.rst-content tt.literal {
+    color: var(--autosumlink);
+    white-space: normal;
+    font-family: 'Fira Code', monospace;
+    font-weight: 600;
+}
+
+html.writer-html4 .rst-content dl:not(.docutils)>dt, html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple) > dt {
+    background: var(--descripboxbackground);
+    /* color: var(--main); */
+    border-top: 3px solid var(--descripboxtopborder);
+}
+
+/* ============================================================================
+ DESCRIPTION PAGE
+============================================================================ */
+
+/* class description box */
+.sig.sig-object.cpp, .sig.sig-object.py {
+    font-family: 'Fira Code', monospace;
+    font-size: 12px !important;
+    color: #555 !important;
+}
+
+/* class/function description name */
+.sig-prename.descclassname, .sig-name.descname {
+    font-family: 'Fira Code', monospace !important;
+}
+
+/* C++ keywords style */
+.sig.sig-object.cpp .k {
+    color: var(--descripboxproperty);
+    font-style: normal !important;
+}
+
+.std.std-ref {/* subclasses */
+    color: #31bd7e;
+    font-family: 'Fira Code', monospace;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.sig.sig-object.cpp .kt {
+    color: #4dc9b4;
+}
+
+/* Python argument style */
+.sig.sig-object.py .n {
+    font-style: normal !important;
+}
+
+.sig.sig-object.py .property {
+    color: var(--descripboxproperty);
+    font-style: normal !important;
+}
+
+.field-list.simple em {
+    font-style: normal !important;
+    font-family: 'Fira Code', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: #4dc9b4;
+}
+
+.return p {
+    color: #4dc9b4;
+    font-family: 'Fira Code', monospace;
+    font-size: 12px !important;
+    font-weight: 600;
+}

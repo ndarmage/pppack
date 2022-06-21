@@ -1,13 +1,7 @@
 import numpy as np
 import itertools as itt
 
-try:
-    import pppack as ppk
-except ImportError:
-    import sys
-    import os
-    sys.path.append(os.path.join("..", "pppack", "lib"))
-    import pppack as ppk
+import pppack as ppk
 
 
 def cmpgtau(tau, g):

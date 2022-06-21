@@ -6,8 +6,9 @@ represent function spaces and functions, in both one- and
 multi-dimensional form. A few methods to operate on tensors
 as equivalent one-dimensional arrays are also included.
 
-.. todo:: Knot optimization for B-spline approximations is
-          not supported yet.
+.. todo::
+   Knot optimization for B-spline approximations is not
+   supported yet.
 
 .. todo::
    Chebyshev multi-dimensional representations are not
@@ -27,11 +28,14 @@ __version__ = "1.1.0"
 
 import numpy as np
 import itertools as itt
+import os
+import sys
+sys.path.insert(1, os.path.dirname(__file__))
 
 # from lib import pppack as ppk
 # from lib import chebyshev_interp_1d as pch
-import lib.pppack as ppk
-import lib.chebyshev_interp_1d as pch
+import pppack.lib.pppack as ppk
+import pppack.lib.chebyshev_interp_1d as pch
 
 
 class Fd(list):
@@ -175,7 +179,7 @@ class PP(Fd):
 
     def cmpPPtau(self):
         r"""
-        Compute the data points from :math:`P_{k,\vec{\xi},\vec{\nu}}`
+        Compute the data points from :math:`P_{k, \vec{\xi}, \vec{\nu}}`
         (osculatory interpolation as default).
         """
         self.basefncs = "trpowf"  # truncated power functions
@@ -211,7 +215,7 @@ class S(Fd):
      t = [1.000,1.000,2.000,3.000,4.000,4.000]
     """
     def __init__(self, k, t, name=''):
-        r"""Initialize :math:`S(k,\vec{t})`."""
+        r"""Initialize :math:`S(k, \vec{t})`."""
         if k < 0:
             raise ValueError("invalid negative order k")
         self.k, self.t, self.name = k, t, name
@@ -313,13 +317,13 @@ class fd(Fd):
     so to :math:`\psi_{\vec{i}}`. The inversion of the associated
     directional Gramian matrices is provided by the specific
     class to which the function :math:`f_{i_j}` belongs.
-    Currently, only :math:`\lambda_{j}g_j = [\tau_j]g(x_j,\dot)`
+    Currently, only :math:`\lambda_{j}g_j = [\tau_j]g(x_j, \dot)`
     is available in the module.
 
     :math:`C_{\vec{i}}` and :math:`g_{\vec{i}}` (gtau in the
     following) are equivalent one-dimensional FORTRAN arrays,
     whereas data points follow as lists :math:`(\tau_{i_j},
-    i_j=1,I_j,\; \forall j)`.
+    i_j = 1, I_j,\; \forall j)`.
 
     .. note:: (*tau*, *gtau*) is to be considered as private to
               ensure the correspondence with the fitting
@@ -369,8 +373,9 @@ class fd(Fd):
     def cmpcoef(self, tau, gtau):
         r"""
         Compute the tensor coefficients of the *d*-dimensional
-        function fd, with input values :math:`gtau=fd(x_\vec{j})`
-        as one-dimensional FORTRAN array and data points tau in a
+        function :math:`f^{(d)}`, instance of :py:class:`fd`, with input
+        values *gtau* = :math:`f^{(d)}(x_\vec{j})` as
+        one-dimensional FORTRAN array and data points tau in a
         list as :math:`[ [x_{j_i=1}^{J_i}], \forall j_i ]`. The
         caller must ensure the correspondence between the *d*-tuples
         *x* with the gtau values according to the definition
@@ -462,11 +467,9 @@ class pp(fd, PP):
     where either
 
     .. math::
-              \begin{align*}
                   i = 1 \mbox{ and }&~~~~~~~~   x < \xi_2,\mbox{ or} \\
                   1<i<l \mbox{ and }&\xi_i \leq x < \xi_{i+1},\mbox{ or}\\
                   i = l \mbox{ and }&\xi_l \leq x.
-              \end{align*}
 
     .. note:: (tau, gtau) is to be considered as private to ensure
               the correspondence with the fitting coefficients.

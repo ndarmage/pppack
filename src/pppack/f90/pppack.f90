@@ -2484,7 +2484,7 @@ subroutine cwidth ( w, b, nequ, ncols, integs, nbloks, d, x, iflag )
   integer ( kind = 4 ) icount
   integer ( kind = 4 ), intent(out) :: iflag
   integer ( kind = 4 ) ii
-  integer ( kind = 4 ), intent(in) :: integs(2,nbloks)
+  integer ( kind = 4 ), intent(in) :: integs(2, nbloks)
   integer ( kind = 4 ) ipvteq
   integer ( kind = 4 ) ipvtp1
   integer ( kind = 4 ) istar

@@ -1,0 +1,21 @@
+// set the class of last line of the table in Python page to "return"
+var dts = document.getElementsByTagName("dt");
+var dds = document.getElementsByTagName("dd");
+var searchText = "Return type";
+
+for (var i = 0; i < dts.length; i++) {
+  if (dts[i].textContent == searchText) {
+    var cor_dd = dds[i];
+    cor_dd.classList.add("return");
+  }
+}
+
+// second to last child of breadcrumbs
+var breadcrumbs = document.getElementsByClassName("wy-breadcrumbs")[0];
+var second_to_last = breadcrumbs.children[breadcrumbs.children.length - 2];
+second_to_last.setAttribute("id", "currentpage-breadcrumbs");
+
+// add author emails
+var contentinfo = document.querySelectorAll("[role='contentinfo']")[0];
+var copyright = contentinfo.children[0];
+copyright.innerHTML = "&#169; Copyright 2022, <a href=\"mailto:daniele.tomatis@gmail.com?subject = PPPACK\">Daniele Tomatis</a>.";
