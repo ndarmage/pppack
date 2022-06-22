@@ -68,11 +68,9 @@ pkgname, pkgversion = get_values(mainfile, '__title__', '__version__')
 # from pppack.pppack import __title__ as pkgname
 
 
-required_packages = [
-    'sphinxcontrib-bibtex>=2.2.0',  # sphinx-doc
-    'sphinx-fortran>=1.1.1',  # sphinx-doc
-    'numpy>=1.17.0',
-]
+with open(os.path.join("docs", "RTD-doc-requirements.txt"), 'r',
+          encoding="utf-8") as f:
+    required_packages = f.readlines()
 
 
 setup(
