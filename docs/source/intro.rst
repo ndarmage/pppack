@@ -31,9 +31,8 @@ performances. These libraries are C-wrapped by f2py_
 
  2. newton_interp_1d.f90 (here appended at the end of pppack.f90)
     
-    Interpolation of polynomials in Newton form by divided diffe- 
-    rences. The code has been upgraded with routines for multi-
-    dimensional data.
+    Interpolation of polynomials in Newton form by divided differences.
+    The code has been upgraded with routines for multidimensional data.
 
  3. chebyshev_interp_1d.f90
     
