@@ -16,6 +16,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath('./_ext'))
 
 # -- Project information -----------------------------------------------------
 
@@ -44,7 +45,7 @@ extensions = [
     'sphinxcontrib.bibtex',
     'sphinx.ext.mathjax',
     'sphinxfortran.fortran_domain',
-    'sphinxfortran.fortran_autodoc',
+    'fortran_autodoc',
     'sphinx.ext.intersphinx'
 ]
 
