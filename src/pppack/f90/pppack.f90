@@ -664,8 +664,8 @@ subroutine bsplpp ( t, bcoef, n, k, scrtch, breaks, coef, l)
 !
   implicit none
 
-  !f2py integer ( kind = 4 ) check(len(bcoef)=n), depend(bcoef) :: n=len(bcoef)
-  !f2py integer ( kind = 4 ) check(len(t)=n+k), depend(t,n) :: k=len(t)-n
+  !f2py integer ( kind = 4 ) check(shape(bcoef,0)=n), depend(bcoef) :: n=shape(bcoef, 0)
+  !f2py integer ( kind = 4 ) check(shape(t, 0)=n+k), depend(t,n) :: k=shape(t, 0)-n
   integer ( kind = 4 ), intent(in) :: k, n
   real ( kind = 8 ), intent(in) :: bcoef(n), t(n+k)
   
@@ -844,8 +844,6 @@ subroutine bsplvb ( t, jhigh, index, x, left, biatx )
   integer ( kind = 4 ), parameter :: jmax = 20
 
   integer ( kind = 4 ), intent(in) :: index
-  !f2py integer ( kind = 4 ), check() :: jhigh
-  !f2py integer ( kind = 4 ), check(len(t)=left+jhigh), depend(t,jhigh) :: left
   integer ( kind = 4 ), intent(in) :: jhigh, left
   real ( kind = 8 ), intent(in) :: t(left+jhigh)
 
