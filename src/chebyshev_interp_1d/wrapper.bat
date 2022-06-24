@@ -3,7 +3,7 @@
 for /F %%i in ("%cd%") do set "lib=%%~ni"
 
 set PY=python -m numpy.f2py
-set OPTS=--verbose --compiler=mingw32
+set OPTS=--verbose --fcompiler=gnu95
 
 set LDFLAGS=-static
 

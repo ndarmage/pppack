@@ -3,7 +3,7 @@
 for /F %%i in ("%cd%") do set "lib=%%~ni"
 
 set PY=python -m numpy.f2py
-set OPTS=--verbose --debug-capi --fcompiler=gnu95 --compiler=mingw32
+set OPTS=--verbose --debug-capi --fcompiler=gnu95
 
 REM set LDFLAGS="-lpthread"
 REM "--disable-threads"
