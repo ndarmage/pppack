@@ -108,8 +108,6 @@ setup(
     keywords=['approximation theory', 'multivariate polynomial', 'splines',
               'fortran'],
 
-    packages=['pppack'],
-
     install_requires=required_packages,
 )
 

@@ -844,8 +844,8 @@ subroutine bsplvb ( t, jhigh, index, x, left, biatx )
   integer ( kind = 4 ), parameter :: jmax = 20
 
   integer ( kind = 4 ), intent(in) :: index
-  !f2py integer ( kind = 4 ), required, check() :: jhigh
-  !f2py integer ( kind = 4 ), required, check(len(t)=left+jhigh), depend(t,jhigh) :: left
+  !f2py integer ( kind = 4 ), check() :: jhigh
+  !f2py integer ( kind = 4 ), check(len(t)=left+jhigh), depend(t,jhigh) :: left
   integer ( kind = 4 ), intent(in) :: jhigh, left
   real ( kind = 8 ), intent(in) :: t(left+jhigh)
 
